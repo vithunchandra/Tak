@@ -8,6 +8,12 @@ enum Color{
     WHITE = "white"
 }
 
+enum StoneSize{
+    flatStoneSize = 90,
+    capStoneWidth = 30,
+    capStoneHeight = 90,
+}
+
 export{
-    Position, Color
+    Position, Color, StoneSize
 }

@@ -3,3 +3,34 @@ body{
   padding: 0;
   box-sizing: border-box;
 }
+
+.capstone{
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
+.stone{
+  width: 90px;
+  height: 90px;
+}
+
+.black-stone{
+  background-color: black;
+  border: solid 2px brown;
+}
+
+.white-stone{
+  background-color: white;
+  border: solid 2px limegreen;
+}
+
+.black-capstone{
+  background-color: brown;
+  border: solid 2px black;
+}
+
+.white-capstone{
+  background-color: limegreen;
+  border: 2px solid white;
+}
