@@ -8,7 +8,7 @@ export default function Item(
         stoneNumber: StoneNumber,
         stoneSelection: StoneSelection,
         setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>,
-        setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>,
+        setStoneStack: React.Dispatch<React.SetStateAction<StoneStack | undefined>>,
         turn: Boolean
     }
 ){
@@ -72,7 +72,7 @@ export default function Item(
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{
                         width: `${StoneSize.capStoneSize}px`,
                         height: `${StoneSize.capStoneSize}px`,
-                        borderRadius:"50%",
+                        borderRadius: "50%",
                         cursor:"pointer"
                     }} data-iscapstone="true" data-color={stoneNumber.color} onClick={selectStone}></div>
                 </div>
