@@ -33,6 +33,7 @@ export default function Item(
                     <div className={`${stoneNumber.color}-stone mx-auto`} style={{
                         width: `${StoneSize.flatStoneSize}px`,
                         height: `${StoneSize.flatStoneSize}px`,
+                        cursor: 'pointer'
                     }} data-iscapstone="false" data-color={stoneNumber.color} onClick={selectStone}></div>
                 </div>
                 <div className="col-6 d-flex align-items-center">
@@ -44,10 +45,11 @@ export default function Item(
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{
                         width: `${StoneSize.capStoneWidth}px`,
                         height: `${StoneSize.capStoneHeight}px`,
+                        cursor: 'pointer'
                     }} data-iscapstone="true" data-color={stoneNumber.color} onClick={selectStone}></div>
                 </div>
                 <div className="col d-flex align-items-center">
-                    <span className="fs-5 fw-bold">{stoneNumber.flatStoneNumber}</span>
+                    <span className="fs-5 fw-bold">{stoneNumber.capStoneNumber}</span>
                 </div>
             </div>
         </>

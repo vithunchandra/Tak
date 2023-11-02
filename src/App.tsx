@@ -46,7 +46,16 @@ function App() {
           </div>
         </div>
         <div className="col-auto mx-auto">
-          <Board setStoneStack={setStoneStack} board={board} setBoard={setBoard} stoneSelection={stoneSelection} setStoneSelection={setStoneSelection}></Board>
+          <Board 
+            setStoneStack={setStoneStack} 
+            board={board} setBoard={setBoard} 
+            stoneSelection={stoneSelection} 
+            setStoneSelection={setStoneSelection}
+            whiteStoneNumber={whiteStoneNumber}
+            setWhiteStoneNumber={setWhiteStoneNumber}
+            blackStoneNumber={blackStoneNumber}
+            setBlackStoneNumber={setBlackStoneNumber}
+          ></Board>
         </div>
         <div className="col"></div>
       </div>
