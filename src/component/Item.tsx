@@ -53,11 +53,13 @@ export default function Item(
                         <div className={`${stoneNumber.color}-stone mx-auto`} style={{
                             width: "90px",
                             height: `${StoneSize.flatStoneHeight}px`,
+                            cursor: "pointer"
                         }} data-iscapstone="false" data-color={stoneNumber.color} onClick={selectStone}></div>
                         :
                         <div className={`${stoneNumber.color}-stone mx-auto`} style={{
                             width: "90px",
                             height: `${StoneSize.standStoneHeight}px`,
+                            cursor: "pointer"
                         }} data-iscapstone="false" data-color={stoneNumber.color} onClick={selectStone}></div>
                     }
                 </div>
@@ -70,7 +72,8 @@ export default function Item(
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{
                         width: `${StoneSize.capStoneSize}px`,
                         height: `${StoneSize.capStoneSize}px`,
-                        borderRadius: "50%"
+                        borderRadius:"50%",
+                        cursor:"pointer"
                     }} data-iscapstone="true" data-color={stoneNumber.color} onClick={selectStone}></div>
                 </div>
                 <div className="col d-flex align-items-center">

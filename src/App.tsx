@@ -10,7 +10,7 @@ import { StoneSelection, StoneStack } from './Interface/Stone';
 
 function App() {
   const [board, setBoard] = useState<Stone[][][]>();
-  const [stoneStack, setStoneStack] = useState<StoneStack>({
+  const [stoneStack, setStoneStack] = useState<StoneStack | undefined>({
     X: -1,
     Y: -1,
     stoneStack: undefined
@@ -33,7 +33,7 @@ function App() {
     isSelected: false,
     stoneDetail: undefined
   });
-  const [turn, setTurn] = useState<Boolean>(false);
+  const [turn, setTurn] = useState<boolean>(false);
   useEffect(() => {
     console.log(stoneSelection)
   }, [stoneSelection])
@@ -46,7 +46,7 @@ function App() {
               <Indicator stoneStack={stoneStack}></Indicator>
             </div>
             <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
-              {(stoneSelection.stoneDetail != undefined || stoneStack.stoneStack != undefined) && <button className='btn btn-info' onClick={() => {
+              {(stoneSelection.stoneDetail != undefined || stoneStack?.stoneStack != undefined) && <button className='btn btn-info' onClick={() => {
                 setStoneSelection({
                   isSelected: false,
                   stoneDetail: undefined
@@ -59,16 +59,18 @@ function App() {
         </div>
 
         <div className="col-auto mx-auto">
-          <Board stoneStack={stoneStack} setStoneStack={setStoneStack} board={board} setBoard={setBoard} stoneSelection={stoneSelection} setStoneSelection={setStoneSelection} whiteStoneNumber={whiteStoneNumber} setWhiteStoneNumber={setWhiteStoneNumber} blackStoneNumber={blackStoneNumber} setBlackStoneNumber={setBlackStoneNumber} turn={turn} setTurn={setTurn}></Board>
-        </div>
-
-        <div className='col bg-success'>
-          <div className='row flex-column h-100'>
-            <div className="col-auto h-50"></div>
-            <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
-              <Item stoneNumber={blackStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} setStoneStack={setStoneStack} turn={turn}></Item>
-            </div>
-          </div>
+          <Board 
+            stoneStack={stoneStack}
+            setStoneStack={setStoneStack} 
+            board={board} setBoard={setBoard} 
+            stoneSelection={stoneSelection} 
+            setStoneSelection={setStoneSelection}
+            whiteStoneNumber={whiteStoneNumber}
+            setWhiteStoneNumber={setWhiteStoneNumber}
+            blackStoneNumber={blackStoneNumber}
+            setBlackStoneNumber={setBlackStoneNumber}
+            turn={turn} setTurn={setTurn}
+          ></Board>
         </div>
       </div>
     </div>

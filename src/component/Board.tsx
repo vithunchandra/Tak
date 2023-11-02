@@ -1,23 +1,23 @@
 import React, { useEffect} from "react";
 import Stone from "../class/Stone";
-import { StoneSelection, StoneStack } from "../Interface/Stone";
-import StoneNumber from "../Interface/StoneNumber";
-import { Color } from '../enum/StoneEnum';
+import BoardDataInterface from "../Interface/BoardDataInterface";
+import { Color } from "../enum/StoneEnum";
 
-export default function Board({stoneStack, setStoneStack, board, setBoard, stoneSelection, setStoneSelection, whiteStoneNumber, setWhiteStoneNumber, blackStoneNumber, setBlackStoneNumber, turn, setTurn}: {
-    stoneStack: StoneStack,
-    setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>,
-    board: Stone[][][] | undefined,
-    setBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>,
-    stoneSelection: StoneSelection,
-    setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>,
-    whiteStoneNumber: StoneNumber,
-    setWhiteStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>,
-    blackStoneNumber: StoneNumber,
-    setBlackStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>,
-    turn: Boolean,
-    setTurn: React.Dispatch<React.SetStateAction<Boolean>>
-}){
+export default function Board(
+    {
+        stoneStack,
+        setStoneStack, 
+        board, setBoard, 
+        stoneSelection, 
+        setStoneSelection, 
+        whiteStoneNumber, 
+        setWhiteStoneNumber, 
+        blackStoneNumber, 
+        setBlackStoneNumber,
+        turn, setTurn
+    } : BoardDataInterface
+    
+){
     const width: number = 700;
     const height: number = 700;
     const size: number = 6;
@@ -78,41 +78,30 @@ export default function Board({stoneStack, setStoneStack, board, setBoard, stone
             const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
             const y = parseInt(event.currentTarget.getAttribute('data-y') || '-1');
             if(board[x][y].length == 0){
+            
+                if(stoneSelection.stoneDetail && stoneSelection.stoneDetail.color === Color.BLACK){
+                    setBlackStoneNumber(
+                        {
+                            capStoneNumber: stoneSelection.stoneDetail.isCapstone ? blackStoneNumber.capStoneNumber - 1 : blackStoneNumber.capStoneNumber,
+                            flatStoneNumber: stoneSelection.stoneDetail.isCapstone ? blackStoneNumber.flatStoneNumber : blackStoneNumber.flatStoneNumber - 1,
+                            color: stoneSelection.stoneDetail.color
+                        }
+                    )
+                }else{
+                    stoneSelection.stoneDetail && setWhiteStoneNumber(
+                        {
+                            capStoneNumber: stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber,
+                            flatStoneNumber: stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1,
+                            color: stoneSelection.stoneDetail.color
+                        }
+                    )
+                }
+
                 const temp = board.slice();
                 board && stoneSelection.stoneDetail && temp[x][y].push(
                     new Stone(stoneSelection.stoneDetail.position, stoneSelection.stoneDetail.isCapstone, stoneSelection.stoneDetail.color)
                 );
                 setBoard(temp);
-                
-                if(stoneSelection.stoneDetail?.color == Color.WHITE){
-                    if(stoneSelection.stoneDetail?.isCapstone){
-                        setWhiteStoneNumber({
-                            capStoneNumber: whiteStoneNumber.capStoneNumber-1,
-                            flatStoneNumber: whiteStoneNumber.flatStoneNumber,
-                            color: Color.WHITE
-                        })
-                    }else{
-                        setWhiteStoneNumber({
-                            capStoneNumber: whiteStoneNumber.capStoneNumber,
-                            flatStoneNumber: whiteStoneNumber.flatStoneNumber-1,
-                            color: Color.WHITE
-                        })
-                    }
-                }else{
-                    if(stoneSelection.stoneDetail?.isCapstone){
-                        setBlackStoneNumber({
-                            capStoneNumber: blackStoneNumber.capStoneNumber-1,
-                            flatStoneNumber: blackStoneNumber.flatStoneNumber,
-                            color: Color.BLACK
-                        })
-                    }else{
-                        setBlackStoneNumber({
-                            capStoneNumber: blackStoneNumber.capStoneNumber,
-                            flatStoneNumber: blackStoneNumber.flatStoneNumber-1,
-                            color: Color.BLACK
-                        })
-                    }
-                }
 
                 setStoneSelection({
                     isSelected: false,
@@ -134,7 +123,7 @@ export default function Board({stoneStack, setStoneStack, board, setBoard, stone
                                 x.map((y, indexY) => {
                                     return (
                                         <div
-                                            className={`col-${12/board.length} position-relative d-flex align-items-center justify-content-center text-center border`} 
+                                            className={`col-${12/board.length} position-relative d-flex align-items-center justify-content-center text-center border board-column`} 
                                             style={{height: `${height/size}px`}}
                                             key={`${indexX}${indexY}`}
                                             data-x={indexX} data-y={indexY}
