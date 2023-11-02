@@ -1,6 +1,7 @@
 import Stone from "../class/Stone";
 import { StoneSelection, StoneStack } from "./Stone";
 import StoneNumber from "./StoneNumber";
+import Turn from "./Turn";
 
 export default interface BoardDataInterface {
     stoneStack: StoneStack | undefined;
@@ -13,6 +14,6 @@ export default interface BoardDataInterface {
     setWhiteStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>;
     blackStoneNumber: StoneNumber;
     setBlackStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>;
-    turn: boolean;
-    setTurn: React.Dispatch<React.SetStateAction<boolean>>;
+    turn: Turn;
+    setTurn: React.Dispatch<React.SetStateAction<Turn>>;
 }

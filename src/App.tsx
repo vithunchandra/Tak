@@ -7,13 +7,14 @@ import StoneNumber from './Interface/StoneNumber';
 import { Color } from './enum/StoneEnum';
 import Item from './component/Item';
 import { StoneSelection, StoneStack } from './Interface/Stone';
+import Turn from './Interface/Turn';
 
 function App() {
   const [board, setBoard] = useState<Stone[][][]>();
   const [stoneStack, setStoneStack] = useState<StoneStack | undefined>({
     X: -1,
     Y: -1,
-    stoneStack: undefined
+    Stack: undefined
   });
   const [whiteStoneNumber, setWhiteStoneNumber] = useState<StoneNumber>(
     {
@@ -33,25 +34,29 @@ function App() {
     isSelected: false,
     stoneDetail: undefined
   });
-  const [turn, setTurn] = useState<boolean>(false);
+  const [turn, setTurn] = useState<Turn>({
+    firstMove: true,
+    turn: false
+  });
   useEffect(() => {
     console.log(stoneSelection)
   }, [stoneSelection])
   return (
     <div className='container-fluid'>
       <div className="row">
+
         <div className='col bg-success'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
               <Indicator stoneStack={stoneStack}></Indicator>
             </div>
             <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
-              {(stoneSelection.stoneDetail != undefined || stoneStack?.stoneStack != undefined) && <button className='btn btn-info' onClick={() => {
+              {(stoneSelection.stoneDetail != undefined || stoneStack?.Stack != undefined) && <button className='btn btn-info' onClick={() => {
                 setStoneSelection({
                   isSelected: false,
                   stoneDetail: undefined
                 })
-                setStoneStack({X:-1, Y:-1, stoneStack:undefined});
+                setStoneStack({X:-1, Y:-1, Stack:undefined});
               }}>cancel</button>}
               <Item stoneNumber={whiteStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} setStoneStack={setStoneStack} turn={turn}></Item>
             </div>
@@ -72,6 +77,18 @@ function App() {
             turn={turn} setTurn={setTurn}
           ></Board>
         </div>
+
+        <div className='col bg-success'>
+          <div className='row flex-column h-100'>
+            <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
+              <Indicator stoneStack={stoneStack}></Indicator>
+            </div>
+            <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
+              <Item stoneNumber={blackStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} setStoneStack={setStoneStack} turn={turn}></Item>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   )

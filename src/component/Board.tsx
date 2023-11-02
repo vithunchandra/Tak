@@ -47,8 +47,8 @@ export default function Board(
 
         if(stoneStack && isValidate(stoneStack.X, stoneStack.Y, x, y)){
             // move/unstack
-            if(stoneStack.stoneStack?.length == 1 && stoneStack.X == x && stoneStack.Y == y){
-                setStoneStack({X:-1, Y:-1, stoneStack: undefined})
+            if(stoneStack.Stack?.length == 1 && stoneStack.X == x && stoneStack.Y == y){
+                setStoneStack({X:-1, Y:-1, Stack: undefined})
             }else{
 
 
@@ -56,19 +56,22 @@ export default function Board(
 
 
 
-
-                setTurn(!turn);
-                setStoneStack({X:-1, Y:-1, stoneStack: undefined})
+                
+                setTurn({
+                    firstMove: turn.firstMove,
+                    turn: !turn.turn,
+                });
+                setStoneStack({X:-1, Y:-1, Stack: undefined})
             }
         }else{
             if(board && ((board[x][y][board[x][y].length-1]?.color == Color.WHITE && turn) || (board[x][y][board[x][y].length-1]?.color == Color.BLACK && !turn))){
                 setStoneStack({
                     X: x,
                     Y: y,
-                    stoneStack: [...board[x][y]]
+                    Stack: [...board[x][y]]
                 })
             }else{
-                setStoneStack({X:-1, Y:-1, stoneStack: undefined})
+                setStoneStack({X:-1, Y:-1, Stack: undefined})
             }
         }
     }
@@ -108,7 +111,17 @@ export default function Board(
                     stoneDetail: undefined
                 });
 
-                setTurn(!turn);
+                if(turn.firstMove && turn.turn){
+                    setTurn({
+                        firstMove: false,
+                        turn: true
+                    })
+                }else{
+                    setTurn({
+                        firstMove: turn.firstMove,
+                        turn: !turn.turn,
+                    });
+                }
             }
         }
     }

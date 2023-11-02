@@ -15,7 +15,7 @@ interface StoneSelection{
 interface StoneStack{
     X: number;
     Y: number;
-    stoneStack: Stone[] | undefined;
+    Stack: Stone[] | undefined;
 }
 
 export type {

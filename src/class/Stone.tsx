@@ -33,8 +33,12 @@ export default class Stone {
                 }} key={Math.random()}></div>
             )
         }else{
-            const width = 90;
-            const height = 30;
+            let width = 30;
+            let height = 90;
+            if(this.position == "flat"){
+                width = 90;
+                height = 30;
+            }
             
             return (
                 <div className={`${this.color}-stone`} style={{
