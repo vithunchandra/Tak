@@ -1,13 +1,22 @@
 import React, { useEffect} from "react";
 import Stone from "../class/Stone";
-import { StoneSelection } from "../Interface/Stone";
+import { StoneSelection, StoneStack } from "../Interface/Stone";
+import StoneNumber from "../Interface/StoneNumber";
+import { Color } from '../enum/StoneEnum';
 
-export default function Board({setStoneStack, board, setBoard, stoneSelection, setStoneSelection}: {
-    setStoneStack: React.Dispatch<React.SetStateAction<Stone[] | undefined>>,
+export default function Board({stoneStack, setStoneStack, board, setBoard, stoneSelection, setStoneSelection, whiteStoneNumber, setWhiteStoneNumber, blackStoneNumber, setBlackStoneNumber, turn, setTurn}: {
+    stoneStack: StoneStack,
+    setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>,
     board: Stone[][][] | undefined,
     setBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>,
     stoneSelection: StoneSelection,
-    setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>
+    setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>,
+    whiteStoneNumber: StoneNumber,
+    setWhiteStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>,
+    blackStoneNumber: StoneNumber,
+    setBlackStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>,
+    turn: Boolean,
+    setTurn: React.Dispatch<React.SetStateAction<Boolean>>
 }){
     const width: number = 700;
     const height: number = 700;
@@ -22,30 +31,96 @@ export default function Board({setStoneStack, board, setBoard, stoneSelection, s
     useEffect(() => {
         setBoard(temp)
     }, [])
+
+    function isValidate(x:number, y:number, currX:number, currY:number) {
+        if(((currX+1==x||currX-1==x)&&currY==y)||((currY+1==y||currY-1==y)&&currX==x)||(x==currX&&y==currY)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     
     function setIndicator(event: React.MouseEvent<HTMLElement>){
         const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
         const y = parseInt(event.currentTarget.getAttribute('data-y') || '-1');
-        board && setStoneStack(
-            [...board[x][y]]
-        );
+
+        if(stoneStack && isValidate(stoneStack.X, stoneStack.Y, x, y)){
+            // move/unstack
+            if(stoneStack.stoneStack?.length == 1 && stoneStack.X == x && stoneStack.Y == y){
+                setStoneStack({X:-1, Y:-1, stoneStack: undefined})
+            }else{
+
+
+
+
+
+
+
+                setTurn(!turn);
+                setStoneStack({X:-1, Y:-1, stoneStack: undefined})
+            }
+        }else{
+            if(board && ((board[x][y][board[x][y].length-1]?.color == Color.WHITE && turn) || (board[x][y][board[x][y].length-1]?.color == Color.BLACK && !turn))){
+                setStoneStack({
+                    X: x,
+                    Y: y,
+                    stoneStack: [...board[x][y]]
+                })
+            }else{
+                setStoneStack({X:-1, Y:-1, stoneStack: undefined})
+            }
+        }
     }
 
     function placeStone(event: React.MouseEvent<HTMLElement>){
         if(board){
             const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
             const y = parseInt(event.currentTarget.getAttribute('data-y') || '-1');
-            const temp = board.slice();
-            board && stoneSelection.stoneDetail && temp[x][y].push(
-                new Stone(stoneSelection.stoneDetail.position, stoneSelection.stoneDetail.isCapstone, stoneSelection.stoneDetail.color)
-            );
-            setBoard(temp);
+            if(board[x][y].length == 0){
+                const temp = board.slice();
+                board && stoneSelection.stoneDetail && temp[x][y].push(
+                    new Stone(stoneSelection.stoneDetail.position, stoneSelection.stoneDetail.isCapstone, stoneSelection.stoneDetail.color)
+                );
+                setBoard(temp);
+                
+                if(stoneSelection.stoneDetail?.color == Color.WHITE){
+                    if(stoneSelection.stoneDetail?.isCapstone){
+                        setWhiteStoneNumber({
+                            capStoneNumber: whiteStoneNumber.capStoneNumber-1,
+                            flatStoneNumber: whiteStoneNumber.flatStoneNumber,
+                            color: Color.WHITE
+                        })
+                    }else{
+                        setWhiteStoneNumber({
+                            capStoneNumber: whiteStoneNumber.capStoneNumber,
+                            flatStoneNumber: whiteStoneNumber.flatStoneNumber-1,
+                            color: Color.WHITE
+                        })
+                    }
+                }else{
+                    if(stoneSelection.stoneDetail?.isCapstone){
+                        setBlackStoneNumber({
+                            capStoneNumber: blackStoneNumber.capStoneNumber-1,
+                            flatStoneNumber: blackStoneNumber.flatStoneNumber,
+                            color: Color.BLACK
+                        })
+                    }else{
+                        setBlackStoneNumber({
+                            capStoneNumber: blackStoneNumber.capStoneNumber,
+                            flatStoneNumber: blackStoneNumber.flatStoneNumber-1,
+                            color: Color.BLACK
+                        })
+                    }
+                }
 
-            setStoneSelection({
-                isSelected: false,
-                stoneDetail: undefined
-            });
+                setStoneSelection({
+                    isSelected: false,
+                    stoneDetail: undefined
+                });
+
+                setTurn(!turn);
+            }
         }
     }
         

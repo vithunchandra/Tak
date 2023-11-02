@@ -15,17 +15,14 @@ export default class Stone {
                     zIndex: `${index}`
                 }}
             ></div> :
-            <div className={`position-absolute ${this.color}-stone stone`} key={index} style={{
+            <div className={`position-absolute ${this.color}-stone ${this.position}-stone`} key={index} style={{
                 zIndex: `${index}`
-            }}></div> 
-                    
-                
-        
+            }}></div>
     }
 
     printAsIndicator(index: number){
         if(this.isCapStone){
-            const width = 30;
+            const width = 60;
             const height = 90;
 
             return (

@@ -10,9 +10,14 @@ body{
   border-radius: 50%;
 }
 
-.stone{
+.flat-stone{
   width: 90px;
   height: 90px;
+}
+
+.stand-stone{
+  width: 90px;
+  height: 30px;
 }
 
 .black-stone{

@@ -1,3 +1,4 @@
+import Stone from "../class/Stone";
 import { Color, Position } from "../enum/StoneEnum";
 
 interface StoneDetailInterface{
@@ -11,6 +12,12 @@ interface StoneSelection{
     stoneDetail: StoneDetailInterface | undefined;
 }
 
+interface StoneStack{
+    X: number;
+    Y: number;
+    stoneStack: Stone[] | undefined;
+}
+
 export type {
-    StoneDetailInterface, StoneSelection
+    StoneDetailInterface, StoneSelection, StoneStack
 };

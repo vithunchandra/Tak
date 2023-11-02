@@ -9,9 +9,9 @@ enum Color{
 }
 
 enum StoneSize{
-    flatStoneSize = 90,
-    capStoneWidth = 30,
-    capStoneHeight = 90,
+    flatStoneHeight = 90,
+    standStoneHeight = 30,
+    capStoneSize = 90,
 }
 
 export{

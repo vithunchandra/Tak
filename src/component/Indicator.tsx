@@ -1,12 +1,12 @@
 export default function Indicator({stoneStack}){
-    if(!stoneStack){
+    if(!stoneStack.stoneStack){
         return <></>
     }
-    console.log(stoneStack);
+    // console.log(stoneStack);
     return (
         <div>
             {
-                stoneStack.map((item, index) => item.printAsIndicator(index))
+                stoneStack.stoneStack.map((item, index) => item.printAsIndicator(index))
             }
         </div>
     )
