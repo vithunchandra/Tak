@@ -1,13 +1,14 @@
 import React, { useEffect} from "react";
 import Stone from "../class/Stone";
 import BoardDataInterface from "../Interface/BoardDataInterface";
-import { Color } from "../enum/StoneEnum";
+import { Color, Point } from "../enum/StoneEnum";
 
 export default function Board(
     {
         stoneStack,
         setStoneStack, 
         board, setBoard, 
+        Cboard, setCBoard, 
         stoneSelection, 
         setStoneSelection, 
         whiteStoneNumber, 
@@ -32,6 +33,15 @@ export default function Board(
         setBoard(temp)
     }, [])
 
+    useEffect(() => {
+        Cboard?.slice()
+        console.log(Cboard)
+    }, [Cboard])
+    // useEffect(() => {
+    //     console.log("paste");
+    //     console.log(board)
+    // }, [board])
+
     function isValidate(x:number, y:number, currX:number, currY:number) {
         if(((currX+1==x||currX-1==x)&&currY==y)||((currY+1==y||currY-1==y)&&currX==x)||(x==currX&&y==currY)){
             return true;
@@ -45,33 +55,112 @@ export default function Board(
         const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
         const y = parseInt(event.currentTarget.getAttribute('data-y') || '-1');
 
-        if(stoneStack && isValidate(stoneStack.X, stoneStack.Y, x, y)){
+        if(board && stoneStack?.Stack){
             // move/unstack
-            if(stoneStack.Stack?.length == 1 && stoneStack.X == x && stoneStack.Y == y){
-                setStoneStack({X:-1, Y:-1, Stack: undefined})
+            let getPoint;
+            if(stoneStack.X == x-1 && stoneStack.Y == y){
+                getPoint = Point.DOWN
+            }else if(stoneStack.X == x+1 && stoneStack.Y == y){
+                getPoint = Point.UP
+            }else if(stoneStack.Y == y-1 && stoneStack.X == x){
+                getPoint = Point.RIGHT
+            }else if(stoneStack.Y == y+1 && stoneStack.X == x){
+                getPoint = Point.LEFT
+            }else if(y == stoneStack.Y && x == stoneStack.X){
+                getPoint = Point.CENTER
             }else{
+                getPoint = undefined
+            }
 
-
-
-
-
-
-                
+            const temp = board.slice();
+            const tmp = stoneStack;
+            
+            if(getPoint == undefined){
+                setBoard(Cboard)
+                setStoneStack({X:-1, Y:-1, Stack: undefined})
                 setTurn({
                     firstMove: turn.firstMove,
-                    turn: !turn.turn,
+                    turn: turn.turn,
+                    point: undefined
                 });
-                setStoneStack({X:-1, Y:-1, Stack: undefined})
+            }else if(turn.point){
+                if(turn.point == Point.CENTER){
+                    console.log("test center");
+                }else if(turn.point == Point.UP && (getPoint == Point.UP || getPoint == Point.CENTER)){
+                    console.log("test up");
+                }else if(turn.point == Point.RIGHT && (getPoint == Point.RIGHT || getPoint == Point.CENTER)){
+                    console.log("test right");
+                }else if(turn.point == Point.DOWN && (getPoint == Point.DOWN || getPoint == Point.CENTER)){
+                    console.log("test down");
+                }else if(turn.point == Point.LEFT && (getPoint == Point.LEFT || getPoint == Point.CENTER)){
+                    console.log("test left");
+                }else{
+                    console.log("test wrong");
+                    setBoard(Cboard)
+                    setStoneStack({X:-1, Y:-1, Stack: undefined})
+                    setTurn({
+                        firstMove: turn.firstMove,
+                        turn: turn.turn,
+                        point: undefined
+                    });
+                }
+            }else{
+                temp && temp[stoneStack.X][stoneStack.Y].splice(0, temp[stoneStack.X][stoneStack.Y].length > 6 ? 6 : temp[stoneStack.X][stoneStack.Y].length);
+                tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                setBoard(temp);
+                setStoneStack({
+                    X: x,
+                    Y: y,
+                    Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+                });
+
+                if(getPoint == Point.CENTER){
+                    setTurn({
+                        firstMove: turn.firstMove,
+                        turn: turn.turn,
+                        point: tmp.Stack?.length == 0 ? undefined : getPoint
+                    });
+                }else{
+                    setTurn({
+                        firstMove: turn.firstMove,
+                        turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                        point: tmp.Stack?.length == 0 ? undefined : getPoint
+                    });
+                }
+
             }
         }else{
-            if(board && ((board[x][y][board[x][y].length-1]?.color == Color.WHITE && turn) || (board[x][y][board[x][y].length-1]?.color == Color.BLACK && !turn))){
+            if(turn.point == undefined){
+                board && setCBoard([
+                    [
+                        [...board[0][0]], [...board[0][1]], [...board[0][2]], [...board[0][3]], [...board[0][4]], [...board[0][5]]
+                    ],
+                    [
+                        [...board[1][0]], [...board[1][1]], [...board[1][2]], [...board[1][3]], [...board[1][4]], [...board[1][5]]
+                    ],
+                    [
+                        [...board[2][0]], [...board[2][1]], [...board[2][2]], [...board[2][3]], [...board[2][4]], [...board[2][5]]
+                    ],
+                    [
+                        [...board[3][0]], [...board[3][1]], [...board[3][2]], [...board[3][3]], [...board[3][4]], [...board[3][5]]
+                    ],
+                    [
+                        [...board[4][0]], [...board[4][1]], [...board[4][2]], [...board[4][3]], [...board[4][4]], [...board[4][5]]
+                    ],
+                    [
+                        [...board[5][0]], [...board[5][1]], [...board[5][2]], [...board[5][3]], [...board[5][4]], [...board[5][5]]
+                    ],
+                ])
+            }
+
+            if(board && ((board[x][y][board[x][y].length-1]?.color == Color.WHITE && turn.turn) || (board[x][y][board[x][y].length-1]?.color == Color.BLACK && !turn.turn))){
                 setStoneStack({
                     X: x,
                     Y: y,
                     Stack: [...board[x][y]]
                 })
             }else{
-                setStoneStack({X:-1, Y:-1, Stack: undefined})
+                console.log("Test");
             }
         }
     }
@@ -114,12 +203,14 @@ export default function Board(
                 if(turn.firstMove && turn.turn){
                     setTurn({
                         firstMove: false,
-                        turn: true
+                        turn: true,
+                        point: undefined
                     })
                 }else{
                     setTurn({
                         firstMove: turn.firstMove,
                         turn: !turn.turn,
+                        point: undefined
                     });
                 }
             }

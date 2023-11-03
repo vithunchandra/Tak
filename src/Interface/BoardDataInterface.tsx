@@ -4,10 +4,12 @@ import StoneNumber from "./StoneNumber";
 import Turn from "./Turn";
 
 export default interface BoardDataInterface {
-    stoneStack: StoneStack | undefined;
-    setStoneStack: React.Dispatch<React.SetStateAction<StoneStack | undefined>>;
+    stoneStack: StoneStack;
+    setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>;
     board: Stone[][][] | undefined;
     setBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>;
+    Cboard: Stone[][][] | undefined;
+    setCBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>;
     stoneSelection: StoneSelection;
     setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>;
     whiteStoneNumber: StoneNumber;

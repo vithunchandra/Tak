@@ -9,7 +9,7 @@ export default function Item(
         stoneNumber: StoneNumber,
         stoneSelection: StoneSelection,
         setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>,
-        setStoneStack: React.Dispatch<React.SetStateAction<StoneStack | undefined>>,
+        setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>,
         turn: Turn
     }
 ){

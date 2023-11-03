@@ -11,7 +11,8 @@ import Turn from './Interface/Turn';
 
 function App() {
   const [board, setBoard] = useState<Stone[][][]>();
-  const [stoneStack, setStoneStack] = useState<StoneStack | undefined>({
+  const [Cboard, setCBoard] = useState<Stone[][][]>();
+  const [stoneStack, setStoneStack] = useState<StoneStack>({
     X: -1,
     Y: -1,
     Stack: undefined
@@ -36,7 +37,8 @@ function App() {
   });
   const [turn, setTurn] = useState<Turn>({
     firstMove: true,
-    turn: false
+    turn: false,
+    point: undefined
   });
   useEffect(() => {
     console.log(stoneSelection)
@@ -68,6 +70,7 @@ function App() {
             stoneStack={stoneStack}
             setStoneStack={setStoneStack} 
             board={board} setBoard={setBoard} 
+            Cboard={Cboard} setCBoard={setCBoard} 
             stoneSelection={stoneSelection} 
             setStoneSelection={setStoneSelection}
             whiteStoneNumber={whiteStoneNumber}
