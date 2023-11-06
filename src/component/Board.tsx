@@ -1,7 +1,7 @@
 import React, { useEffect} from "react";
 import Stone from "../class/Stone";
 import BoardDataInterface from "../Interface/BoardDataInterface";
-import { Color, Point } from "../enum/StoneEnum";
+import { Color, Point, Position } from "../enum/StoneEnum";
 
 export default function Board(
     {
@@ -32,116 +32,48 @@ export default function Board(
     useEffect(() => {
         setBoard(temp)
     }, [])
+    useEffect(() => {
+        console.log(turn);
+    }, [turn])
 
     function setIndicator(event: React.MouseEvent<HTMLElement>){
         const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
         const y = parseInt(event.currentTarget.getAttribute('data-y') || '-1');
 
         if(board && stoneStack?.Stack){
-            // move/unstack
-            let getPoint;
-            if(stoneStack.X == x-1 && stoneStack.Y == y){
-                getPoint = Point.DOWN
-            }else if(stoneStack.X == x+1 && stoneStack.Y == y){
-                getPoint = Point.UP
-            }else if(stoneStack.Y == y-1 && stoneStack.X == x){
-                getPoint = Point.RIGHT
-            }else if(stoneStack.Y == y+1 && stoneStack.X == x){
-                getPoint = Point.LEFT
-            }else if(y == stoneStack.Y && x == stoneStack.X){
-                getPoint = Point.CENTER
-            }else{
-                getPoint = undefined
+            let move = true
+            if(stoneStack.Stack[0].isCapStone && board[x][y][board[x][y].length-1]?.isCapStone){
+                move = false
+            }else if(((stoneStack.Stack[0].position == Position.FLAT && !stoneStack.Stack[0].isCapStone) || stoneStack.Stack[0].position == Position.STAND) && (board[x][y][board[x][y].length-1]?.position == Position.STAND || board[x][y][board[x][y].length-1]?.isCapStone)){
+                move = false
+            }
+            if(stoneStack.Stack[0].isCapStone && board[x][y][board[x][y].length-1]?.position == Position.STAND){
+                console.log("test");
+                board[x][y][board[x][y].length-1].position = Position.FLAT
+                setBoard(board)
             }
 
-            const temp = board.slice();
-            const tmp = stoneStack;
-            
-            if(getPoint == undefined){
-                setBoard(Cboard)
-                setStoneStack({X:-1, Y:-1, Stack: undefined})
-                setTurn({
-                    firstMove: turn.firstMove,
-                    turn: turn.turn,
-                    point: undefined
-                });
-            }else if(turn.point){
-                if(turn.point == Point.CENTER){
-                    console.log("test center");
-                    tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-                    setBoard(temp);
-                    setStoneStack({
-                        X: x,
-                        Y: y,
-                        Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-                    });
-
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
-                    });
-                }else if(turn.point == Point.UP && (getPoint == Point.UP || getPoint == Point.CENTER)){
-                    console.log("test up");
-                    tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-                    setBoard(temp);
-                    setStoneStack({
-                        X: x,
-                        Y: y,
-                        Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-                    });
-
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
-                    });
-                }else if(turn.point == Point.RIGHT && (getPoint == Point.RIGHT || getPoint == Point.CENTER)){
-                    console.log("test right");
-                    tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-                    setBoard(temp);
-                    setStoneStack({
-                        X: x,
-                        Y: y,
-                        Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-                    });
-
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
-                    });
-                }else if(turn.point == Point.DOWN && (getPoint == Point.DOWN || getPoint == Point.CENTER)){
-                    console.log("test down");
-                    tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-                    setBoard(temp);
-                    setStoneStack({
-                        X: x,
-                        Y: y,
-                        Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-                    });
-
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
-                    });
-                }else if(turn.point == Point.LEFT && (getPoint == Point.LEFT || getPoint == Point.CENTER)){
-                    console.log("test left");
-                    tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-                    setBoard(temp);
-                    setStoneStack({
-                        X: x,
-                        Y: y,
-                        Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-                    });
-
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
-                    });
+            if(move){
+                // move/unstack
+                let getPoint;
+                if(stoneStack.X == x-1 && stoneStack.Y == y){
+                    getPoint = Point.DOWN
+                }else if(stoneStack.X == x+1 && stoneStack.Y == y){
+                    getPoint = Point.UP
+                }else if(stoneStack.Y == y-1 && stoneStack.X == x){
+                    getPoint = Point.RIGHT
+                }else if(stoneStack.Y == y+1 && stoneStack.X == x){
+                    getPoint = Point.LEFT
+                }else if(y == stoneStack.Y && x == stoneStack.X){
+                    getPoint = Point.CENTER
                 }else{
+                    getPoint = undefined
+                }
+
+                const temp = board.slice();
+                const tmp = stoneStack;
+    
+                if(getPoint == undefined){
                     setBoard(Cboard)
                     setStoneStack({X:-1, Y:-1, Stack: undefined})
                     setTurn({
@@ -149,31 +81,123 @@ export default function Board(
                         turn: turn.turn,
                         point: undefined
                     });
-                }
-            }else{
-                temp && temp[stoneStack.X][stoneStack.Y].splice(0, temp[stoneStack.X][stoneStack.Y].length > 6 ? 6 : temp[stoneStack.X][stoneStack.Y].length);
-                tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-                setBoard(temp);
-                setStoneStack({
-                    X: x,
-                    Y: y,
-                    Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-                });
-
-                if(getPoint == Point.CENTER){
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
-                    });
+                }else if(turn.point){
+                    if(getPoint == Point.CENTER){
+                        // console.log("test center");
+                        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                        setBoard(temp);
+                        setStoneStack({
+                            X: x,
+                            Y: y,
+                            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+                        });
+    
+                        if(turn.point == Point.CENTER){
+                            setTurn({
+                                firstMove: turn.firstMove,
+                                turn: turn.turn,
+                                point: tmp.Stack?.length == 0 ? undefined : turn.point
+                            });
+                        }else{
+                            setTurn({
+                                firstMove: turn.firstMove,
+                                turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                                point: tmp.Stack?.length == 0 ? undefined : turn.point
+                            });
+                        }
+                    }else if((turn.point == Point.UP || turn.point == Point.CENTER) && getPoint == Point.UP){
+                        // console.log("test up");
+                        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                        setBoard(temp);
+                        setStoneStack({
+                            X: x,
+                            Y: y,
+                            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+                        });
+    
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                            point: tmp.Stack?.length == 0 ? undefined : getPoint
+                        });
+                    }else if((turn.point == Point.RIGHT || turn.point == Point.CENTER) && getPoint == Point.RIGHT){
+                        // console.log("test right");
+                        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                        setBoard(temp);
+                        setStoneStack({
+                            X: x,
+                            Y: y,
+                            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+                        });
+    
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                            point: tmp.Stack?.length == 0 ? undefined : getPoint
+                        });
+                    }else if((turn.point == Point.DOWN || turn.point == Point.CENTER) && getPoint == Point.DOWN){
+                        // console.log("test down");
+                        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                        setBoard(temp);
+                        setStoneStack({
+                            X: x,
+                            Y: y,
+                            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+                        });
+    
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                            point: tmp.Stack?.length == 0 ? undefined : getPoint
+                        });
+                    }else if((turn.point == Point.LEFT || turn.point == Point.CENTER) && getPoint == Point.LEFT){
+                        // console.log("test left");
+                        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                        setBoard(temp);
+                        setStoneStack({
+                            X: x,
+                            Y: y,
+                            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+                        });
+    
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                            point: tmp.Stack?.length == 0 ? undefined : getPoint
+                        });
+                    }else{
+                        setBoard(Cboard)
+                        setStoneStack({X:-1, Y:-1, Stack: undefined})
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: turn.turn,
+                            point: undefined
+                        });
+                    }
                 }else{
-                    setTurn({
-                        firstMove: turn.firstMove,
-                        turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
-                        point: tmp.Stack?.length == 0 ? undefined : getPoint
+                    tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+                    setBoard(temp);
+                    setStoneStack({
+                        X: x,
+                        Y: y,
+                        Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
                     });
+    
+                    if(getPoint == Point.CENTER){
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: turn.turn,
+                            point: tmp.Stack?.length == 0 ? undefined : getPoint
+                        });
+                    }else{
+                        setTurn({
+                            firstMove: turn.firstMove,
+                            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+                            point: tmp.Stack?.length == 0 ? undefined : getPoint
+                        });
+                    }
+    
                 }
-
             }
         }else{
             if(turn.point == undefined){
@@ -205,6 +229,9 @@ export default function Board(
                     Y: y,
                     Stack: [...board[x][y]]
                 })
+                const temp = board.slice();
+                temp && temp[x][y].splice(0, temp[x][y].length > 6 ? 6 : temp[x][y].length);
+                setBoard(temp);
             }else{
                 console.log("Test");
             }

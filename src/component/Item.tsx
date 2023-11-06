@@ -20,7 +20,7 @@ export default function Item(
         if(!isCapstone || !turn.firstMove){
             const isSelectedNotNull = isCapstone ? stoneNumber.capStoneNumber > 0 ? true : false : stoneNumber.flatStoneNumber > 0 ? true : false;
             if(isSelectedNotNull && ((color === "white" && turn.turn) || (color === "black" && !turn.turn))){
-                if(stoneSelection.stoneDetail?.isCapstone == false && stoneSelection.stoneDetail.position == "flat"){
+                if(stoneSelection.stoneDetail?.isCapstone == false && stoneSelection.stoneDetail.position == "flat" && !turn.firstMove){
                     setStoneSelection(
                         {
                             isSelected: true,

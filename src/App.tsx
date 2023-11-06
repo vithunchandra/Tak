@@ -41,7 +41,7 @@ function App() {
     point: undefined
   });
   useEffect(() => {
-    console.log(stoneSelection)
+    // console.log(stoneSelection)
   }, [stoneSelection])
   return (
     <div className='container-fluid'>
