@@ -289,6 +289,14 @@ export default function Board(
             }
         }
     }
+
+    function cekwin(){
+
+    }
+
+    function cekskorsbe(){
+
+    }
         
     return (
         <div className="p-5 border border-dark rounded rounded-4">
