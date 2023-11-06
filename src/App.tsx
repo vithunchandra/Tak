@@ -60,7 +60,7 @@ function App() {
                 })
                 setStoneStack({X:-1, Y:-1, Stack:undefined});
               }}>cancel</button>}
-              <Item stoneNumber={whiteStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} setStoneStack={setStoneStack} turn={turn}></Item>
+              <Item stoneNumber={whiteStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} stoneStack={stoneStack} setStoneStack={setStoneStack} turn={turn} setBoard={setBoard} Cboard={Cboard}></Item>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@ function App() {
               <Indicator stoneStack={stoneStack}></Indicator>
             </div>
             <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
-              <Item stoneNumber={blackStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} setStoneStack={setStoneStack} turn={turn}></Item>
+              <Item stoneNumber={blackStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} stoneStack={stoneStack} setStoneStack={setStoneStack} turn={turn} setBoard={setBoard} Cboard={Cboard}></Item>
             </div>
           </div>
         </div>

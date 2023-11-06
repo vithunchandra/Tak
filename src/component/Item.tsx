@@ -1,20 +1,29 @@
 import { StoneSelection, StoneStack } from "../Interface/Stone";
 import StoneNumber from "../Interface/StoneNumber";
 import Turn from "../Interface/Turn";
+import Stone from "../class/Stone";
 import { Color, Position, StoneSize } from "../enum/StoneEnum";
 
 export default function Item(
-    {stoneNumber, stoneSelection, setStoneSelection, setStoneStack, turn}: 
+    {stoneNumber, stoneSelection, setStoneSelection, stoneStack, setStoneStack, turn, setBoard, Cboard}: 
     {
         stoneNumber: StoneNumber,
         stoneSelection: StoneSelection,
         setStoneSelection: React.Dispatch<React.SetStateAction<StoneSelection>>,
+        stoneStack: StoneStack,
         setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>,
-        turn: Turn
+        turn: Turn,
+        setBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>,
+        Cboard: Stone[][][] | undefined
     }
 ){
     function selectStone(event: React.MouseEvent<HTMLElement>){
-        setStoneStack({X:-1, Y:-1, Stack: undefined});
+        console.log(stoneStack);
+        if(stoneStack?.Stack){
+            setStoneStack({X:-1, Y:-1, Stack: undefined});
+            setBoard(Cboard)
+        }
+
         const isCapstone = event.currentTarget.getAttribute('data-iscapstone') === "false" ? false : true;
         const color = event.currentTarget.getAttribute('data-color');
         if(!isCapstone || !turn.firstMove){
