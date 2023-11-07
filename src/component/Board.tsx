@@ -224,13 +224,14 @@ export default function Board(
             }
 
             if(board && ((board[x][y][board[x][y].length-1]?.color == Color.WHITE && turn.turn) || (board[x][y][board[x][y].length-1]?.color == Color.BLACK && !turn.turn))){
+                const count = board[x][y].length > 6 ? 6 : board[x][y].length;
+                const temp = board.slice();
                 setStoneStack({
                     X: x,
                     Y: y,
-                    Stack: [...board[x][y]]
+                    Stack: [...temp[x][y].slice(temp[x][y].length - count)]
                 })
-                const temp = board.slice();
-                temp && temp[x][y].splice(0, temp[x][y].length > 6 ? 6 : temp[x][y].length);
+                temp && temp[x][y].splice(0, count);
                 setBoard(temp);
             }else{
                 console.log("Test");
