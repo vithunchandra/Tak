@@ -290,12 +290,12 @@ export default function Board(
             }
         }
     }
-    function hitungSkorPemain(pemain, papan) {
+    function hitungSkorPemain(pemain, board) {
         let skor = 0;
     
         // Hitung jumlah kotak diisi (K)
         let jumlahKotakDiisi = 0;
-        papan.forEach((baris) => {
+        board.forEach((baris) => {
             baris.forEach((kolom) => {
                 if (kolom.length > 0) {
                     jumlahKotakDiisi++;
@@ -306,7 +306,7 @@ export default function Board(
     
         // Hitung jumlah piece (P)
         let jumlahPiece = 0;
-        papan.forEach((baris) => {
+        board.forEach((baris) => {
             baris.forEach((kolom) => {
                 jumlahPiece += kolom.length;
             });
@@ -315,7 +315,7 @@ export default function Board(
     
         // Hitung jumlah capstone (C)
         let jumlahCapstone = 0;
-        papan.forEach((baris) => {
+        board.forEach((baris) => {
             baris.forEach((kolom) => {
                 kolom.forEach((stone) => {
                     if (stone.isCapstone) {
@@ -330,10 +330,10 @@ export default function Board(
         let jumlahJalur = 0;
 
         // Cek jalur horizontal
-        for (let i = 0; i < papan.length; i++) {
+        for (let i = 0; i < board.length; i++) {
             let jalurHorizontal = true;
-            for (let j = 1; j < papan[i].length; j++) {
-                if (papan[i][j].length === 0 || papan[i][j].length !== papan[i][j - 1].length) {
+            for (let j = 1; j < board[i].length; j++) {
+                if (board[i][j].length === 0 || board[i][j].length !== board[i][j - 1].length) {
                     jalurHorizontal = false;
                     break;
                 }
@@ -344,10 +344,10 @@ export default function Board(
         }
     
         // Cek jalur vertikal
-        for (let j = 0; j < papan[0].length; j++) {
+        for (let j = 0; j < board[0].length; j++) {
             let jalurVertikal = true;
-            for (let i = 1; i < papan.length; i++) {
-                if (papan[i][j].length === 0 || papan[i][j].length !== papan[i - 1][j].length) {
+            for (let i = 1; i < board.length; i++) {
+                if (board[i][j].length === 0 || board[i][j].length !== board[i - 1][j].length) {
                     jalurVertikal = false;
                     break;
                 }
