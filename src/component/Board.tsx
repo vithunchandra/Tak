@@ -290,14 +290,86 @@ export default function Board(
             }
         }
     }
+    function hitungSkorPemain(pemain, papan) {
+        let skor = 0;
+    
+        // Hitung jumlah kotak diisi (K)
+        let jumlahKotakDiisi = 0;
+        papan.forEach((baris) => {
+            baris.forEach((kolom) => {
+                if (kolom.length > 0) {
+                    jumlahKotakDiisi++;
+                }
+            });
+        });
+        skor += jumlahKotakDiisi;
+    
+        // Hitung jumlah piece (P)
+        let jumlahPiece = 0;
+        papan.forEach((baris) => {
+            baris.forEach((kolom) => {
+                jumlahPiece += kolom.length;
+            });
+        });
+        skor += jumlahPiece;
+    
+        // Hitung jumlah capstone (C)
+        let jumlahCapstone = 0;
+        papan.forEach((baris) => {
+            baris.forEach((kolom) => {
+                kolom.forEach((stone) => {
+                    if (stone.isCapstone) {
+                        jumlahCapstone++;
+                    }
+                });
+            });
+        });
+        skor += 5 * jumlahCapstone;
+    
+        // Hitung jumlah jalur (W)
+        let jumlahJalur = 0;
 
-    function cekwin(){
-
+        // Cek jalur horizontal
+        for (let i = 0; i < papan.length; i++) {
+            let jalurHorizontal = true;
+            for (let j = 1; j < papan[i].length; j++) {
+                if (papan[i][j].length === 0 || papan[i][j].length !== papan[i][j - 1].length) {
+                    jalurHorizontal = false;
+                    break;
+                }
+            }
+            if (jalurHorizontal) {
+                jumlahJalur++;
+            }
+        }
+    
+        // Cek jalur vertikal
+        for (let j = 0; j < papan[0].length; j++) {
+            let jalurVertikal = true;
+            for (let i = 1; i < papan.length; i++) {
+                if (papan[i][j].length === 0 || papan[i][j].length !== papan[i - 1][j].length) {
+                    jalurVertikal = false;
+                    break;
+                }
+            }
+            if (jalurVertikal) {
+                jumlahJalur++;
+            }
+        }
+    
+        skor += 10 * jumlahJalur;
+        console.log(skor);
+        
+    
+        return skor;
     }
-
-    function cekskorsbe(){
-
-    }
+    
+    // Contoh penggunaan fungsi untuk menghitung skor pemain putih
+    const skorPemainPutih = hitungSkorPemain("putih", board);
+    
+    // Contoh penggunaan fungsi untuk menghitung skor pemain hitam
+    const skorPemainHitam = hitungSkorPemain("hitam", board);
+    
         
     return (
         <div className="p-5 border border-dark rounded rounded-4">
