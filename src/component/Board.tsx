@@ -79,6 +79,88 @@ export default function Board(
             ],
         ])
     }
+    
+    function terminal(board : Stone[][][]){
+        for(let i=0; i<board.length; i++){
+            if(upToDown(board, i, 0) || leftToRight(board, 0, i)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function leftToRight(board: Stone[][][], rowIndex : number, colIndex : number){
+        if(colIndex === 6){
+            return true;
+        }
+
+        if(rowIndex > 6 || rowIndex < 0){
+            return false;
+        }
+
+        if(board[rowIndex][colIndex].length === 0){
+            return false;
+        }
+
+        const stone = board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1];
+        const stoneUp = board[rowIndex - 1][colIndex][
+            board[rowIndex - 1][colIndex].length <= 0 ? 0 : board[rowIndex - 1][colIndex].length - 1
+        ]
+        const stoneRight = board[rowIndex][colIndex + 1][
+            board[rowIndex][colIndex + 1].length <= 0 ? 0 : board[rowIndex][colIndex + 1].length - 1
+        ]
+        const stoneDown = board[rowIndex + 1][colIndex][
+            board[rowIndex + 1][colIndex].length <= 0 ? 0 :  board[rowIndex + 1][colIndex].length - 1
+        ]
+        if(stone?.color === stoneUp?.color){
+            return leftToRight(board, rowIndex - 1, colIndex)
+        }
+
+        if(stone.color === stoneDown?.color){
+            return leftToRight(board, rowIndex, colIndex + 1)
+        }
+
+        if(stone.color === stoneRight?.color){
+            return leftToRight(board, rowIndex + 1, colIndex)
+        }
+    }
+
+    function upToDown(board: Stone[][][], rowIndex : number, colIndex : number){
+        if(rowIndex === 6){
+            return true;
+        }
+
+        if(colIndex > 6 || colIndex < 0){
+            return false;
+        }
+
+        if(board[rowIndex][colIndex].length === 0){
+            return false;
+        }
+
+        const stone = board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1];
+        const stoneLeft = board[rowIndex][colIndex - 1][
+            board[rowIndex][colIndex - 1].length < 0 ? 0 : board[rowIndex][colIndex - 1].length - 1
+        ]
+        const stoneDown = board[rowIndex + 1][colIndex][
+            board[rowIndex + 1][colIndex].length < 0 ? 0 : board[rowIndex + 1][colIndex].length - 1
+        ] 
+        const stoneRight = board[rowIndex][colIndex + 1][
+            board[rowIndex][colIndex + 1].length < 0 ? 0 : board[rowIndex][colIndex + 1].length - 1
+        ]
+
+        if(stone?.color === stoneLeft?.color){
+            return leftToRight(board, rowIndex, colIndex - 1)
+        }
+
+        if(stone.color === stoneDown?.color){
+            return leftToRight(board, rowIndex + 1, colIndex)
+        }
+
+        if(stone.color === stoneRight?.color){
+            return leftToRight(board, rowIndex, colIndex + 1)
+        }
+    }
 
     function setIndicator(event: React.MouseEvent<HTMLElement>){
         const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
