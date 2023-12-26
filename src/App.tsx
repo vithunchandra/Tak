@@ -59,6 +59,7 @@ function App() {
                   stoneDetail: undefined
                 })
                 setStoneStack({X:-1, Y:-1, Stack:undefined});
+                setBoard(Cboard)
               }}>cancel</button>}
               <Item stoneNumber={whiteStoneNumber} setStoneSelection={setStoneSelection} stoneSelection={stoneSelection} stoneStack={stoneStack} setStoneStack={setStoneStack} turn={turn} setBoard={setBoard} Cboard={Cboard}></Item>
             </div>
