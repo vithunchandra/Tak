@@ -5,7 +5,7 @@ import Stone from "../class/Stone";
 import { Color, Position, StoneSize } from "../enum/StoneEnum";
 
 export default function Item(
-    {stoneNumber, stoneSelection, setStoneSelection, stoneStack, setStoneStack, turn, setBoard, Cboard}: 
+    {stoneNumber, stoneSelection, setStoneSelection, stoneStack, setStoneStack, turn, setBoard, board, Cboard, setCBoard}: 
     {
         stoneNumber: StoneNumber,
         stoneSelection: StoneSelection,
@@ -14,14 +14,41 @@ export default function Item(
         setStoneStack: React.Dispatch<React.SetStateAction<StoneStack>>,
         turn: Turn,
         setBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>,
-        Cboard: Stone[][][] | undefined
+        board: Stone[][][] | undefined,
+        Cboard: Stone[][][] | undefined,
+        setCBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>,
     }
 ){
+    function copyBoard (board : Stone[][][]) {
+        return (board && [
+            [
+                [...board[0][0]], [...board[0][1]], [...board[0][2]], [...board[0][3]], [...board[0][4]], [...board[0][5]]
+            ],
+            [
+                [...board[1][0]], [...board[1][1]], [...board[1][2]], [...board[1][3]], [...board[1][4]], [...board[1][5]]
+            ],
+            [
+                [...board[2][0]], [...board[2][1]], [...board[2][2]], [...board[2][3]], [...board[2][4]], [...board[2][5]]
+            ],
+            [
+                [...board[3][0]], [...board[3][1]], [...board[3][2]], [...board[3][3]], [...board[3][4]], [...board[3][5]]
+            ],
+            [
+                [...board[4][0]], [...board[4][1]], [...board[4][2]], [...board[4][3]], [...board[4][4]], [...board[4][5]]
+            ],
+            [
+                [...board[5][0]], [...board[5][1]], [...board[5][2]], [...board[5][3]], [...board[5][4]], [...board[5][5]]
+            ],
+        ])
+    }
+
     function selectStone(event: React.MouseEvent<HTMLElement>){
-        console.log(stoneStack);
+        // console.log(stoneStack);
         if(stoneStack?.Stack){
             setStoneStack({X:-1, Y:-1, Stack: undefined});
-            setBoard(Cboard)
+            Cboard && setBoard(copyBoard(Cboard))
+        }else{
+            board && setCBoard(copyBoard(board))
         }
 
         const isCapstone = event.currentTarget.getAttribute('data-iscapstone') === "false" ? false : true;
