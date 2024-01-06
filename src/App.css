@@ -54,7 +54,7 @@ body{
 .judul{
   background-color: #3776A1;
   text-align: center;
-  color: black;
+  color: #55E2E9;
   font-weight: bolder ;
   font-size: 50px;
   font-family: Arial, Helvetica, sans-serif;
@@ -109,4 +109,20 @@ body{
 .warna{
   background-color: #F6E3BA;
   border:black 1px solid;
+}
+
+.tombolcancel{
+  width: 200px;
+  height: 65px;
+  font-size: 50px;
+  background-color: red;
+  margin-bottom: 25px;
+  margin-left: 200px;
+}
+
+.tulisan{
+  margin-left: 470px;
+}
+.kirian{
+  margin-right: 7px;
 }
