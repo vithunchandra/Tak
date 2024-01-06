@@ -97,3 +97,7 @@ body{
 .position-absolute {
   position: absolute;
 }
+.margg{
+  padding-top: 25px;
+  padding-right: 15px;
+}

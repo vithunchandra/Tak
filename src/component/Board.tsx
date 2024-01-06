@@ -23,7 +23,7 @@ export default function Board(
     
 ){
     const width: number = 800;
-    const height: number = 730;
+    const height: number = 700;
     const size: number = 6;
     const temp: Stone[][][] = [];
     for(let i=0; i<size; i++){
@@ -1442,46 +1442,56 @@ export default function Board(
             }
         }
     }
-    const columnCodes: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    const columnCodes: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div className="p-5 border border-dark rounded rounded-4">
-          <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
-            
-            {board && board.map((x, indexX) => (
-                <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} key={indexX.toString()}>
-                    <h2 className="col-2">{rowNumbers[indexX]}</h2>
-                    
-                    
-                    <div className="col-10">
-                        {x.map((y, indexY) => (
-                        
+            <div className=" justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
+                <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} >
+                    <h2 className="col-1 margg" ></h2>
+                    <div className="row col-10">
+                        {columnCodes.map((y, indexY) => (
                             <div
-                            className={`col-${12 / board.length} position-relative d-flex align-items-center justify-content-center text-center border board-column`}
-                            style={{ height: `${height / size}px` }}
-                            key={`${indexX}${indexY}`}
-                            data-x={indexX} data-y={indexY}
-                            onClick={stoneSelection.isSelected ? placeStone : setIndicator}
-                        >
+                                className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
+                                style={{ height: `${height / size}px` }}
+                                key={`${indexY}`}
+                            >
+                                <h2>{y}</h2>
+                            </div>
                             
-                            {y.map((z, indexZ) => {
-
-                                // <div className="col-12 d-flex">
-                                //  <div className="board-code">{columnCodes[indexZ]}</div>
-                            //   </div>
-                            let idx = `${indexX}${indexY}${indexZ}`;
-                            return (
-                                z.printStone(idx)
-                            )
-                            })}
-                        </div>
-
-
                         ))}
+                        
+                    </div>
+                
+                    {board && board.map((x, indexX) => (
+                        <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} key={indexX.toString()}>
+                            <h2 className="col-1 margg" >{rowNumbers[indexX]}</h2>
+                            <div className="row col-10">
+                                {x.map((y, indexY) => (
+                                    <div
+                                        className={`col-2 position-relative d-flex align-items-center justify-content-center text-center border board-column`}
+                                        style={{ height: `${height / size}px` }}
+                                        key={`${indexX}${indexY}`}
+                                        data-x={indexX} data-y={indexY}
+                                        onClick={stoneSelection.isSelected ? placeStone : setIndicator}
+                                    >
+                                        
+                                        {y.map((z, indexZ) => {
+
+                                        
+                                        let idx = `${indexX}${indexY}${indexZ}`;
+                                        return (
+                                            z.printStone(idx)
+                                        )
+                                        })}
+                                    </div>
+                                    
+                                ))}
+                        </div>
+                    </div>
+                    ))}
                 </div>
-              </div>
-            ))}
-          </div>
+            </div>
         </div>
       )
       
