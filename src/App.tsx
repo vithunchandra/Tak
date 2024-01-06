@@ -45,8 +45,14 @@ function App() {
   }, [stoneSelection])
   return (
     <div className='container-fluid'>
+      <div className="row atass">
+        <h1 className="judul ">Tak</h1>
+      </div>
+      <div className="row bg-success atas">
+        <h2 className="judul1">{} Turn</h2>
+      </div>
       <div className="row">
-
+        
         <div className='col bg-success'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
