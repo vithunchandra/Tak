@@ -46,3 +46,100 @@ body{
   cursor: pointer;
   transition: all 0.2s ease;
 }
+.atas{
+
+  height:80px;
+
+}
+.judul{
+  background-color: #3776A1;
+  text-align: center;
+  color: #55E2E9;
+  font-weight: bolder ;
+  font-size: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: -5px;
+}
+.judul2{
+  font-size: 40px;
+  font-weight: 500;
+  text-align: center;
+  color:white;
+  padding-top: 20px;
+}
+
+.judul1{
+  font-size: 40px;
+  font-weight: 500;
+  text-align: center;
+  color:black;
+  padding-top: 20px;
+}
+
+.tengah{
+  margin-top: 10px;
+}
+
+.atass{
+  background-color: #5DE23C;
+}
+.backgroundcolor{
+  background-color: #6EB1D6;
+}
+.board-code {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  
+  justify-content: center;
+  font-weight: bold;
+  color:red;
+}
+
+.board-code-kiri {
+  width: 30px;
+  height: 30px;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color:black;
+}
+
+.board-column {
+  position: relative;
+}
+
+.board-code,
+.position-absolute {
+  position: absolute;
+}
+.margg{
+  padding-top: 25px;
+  padding-right: 15px;
+}
+.warna{
+  background-color: #F6E3BA;
+  border:black 1px solid;
+}
+
+.tombolcancel{
+  width: 200px;
+  height: 65px;
+  font-size: 50px;
+  background-color: red;
+  margin-bottom: 25px;
+  margin-left: 200px;
+}
+
+.tulisan{
+  margin-left: 470px;
+}
+.kirian{
+  margin-right: 7px;
+}
+.jaraks{
+  margin-bottom: -20px;
+}

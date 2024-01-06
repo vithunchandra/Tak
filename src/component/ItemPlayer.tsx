@@ -78,6 +78,9 @@ export default function Item(
     return (
         <>
             <div className="row text-center">
+                <div className="col-1 tulisan d-flex align-items">
+                    <h2 className="fw-bold">{stoneNumber.flatStoneNumber}</h2>
+                </div>
                 <div className="col-4 d-flex align-items-center justify-content-center">
                     {
                         stoneSelection.stoneDetail == undefined || stoneSelection.stoneDetail?.position == "flat" ?
@@ -94,21 +97,19 @@ export default function Item(
                         }} data-iscapstone="false" data-color={stoneNumber.color} onClick={selectStone}></div>
                     }
                 </div>
-                <div className="col-6 d-flex align-items-center">
-                    <h2 className="fw-bold">{stoneNumber.flatStoneNumber}</h2>
-                </div>
+            
             </div><br />
             <div className="row text-center">
-                <div className="col-4">
+                <div className="col 2 tulisan d-flex align-items-center">
+                    <h2 className="fw-bold">{stoneNumber.capStoneNumber}</h2>
+                </div>
+                <div className="col-4 kirian">
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{
                         width: `${StoneSize.capStoneSize}px`,
                         height: `${StoneSize.capStoneSize}px`,
                         borderRadius: "50%",
                         cursor:"pointer"
                     }} data-iscapstone="true" data-color={stoneNumber.color} onClick={selectStone}></div>
-                </div>
-                <div className="col d-flex align-items-center">
-                    <h2 className="fw-bold">{stoneNumber.capStoneNumber}</h2>
                 </div>
             </div>
         </>

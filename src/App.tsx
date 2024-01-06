@@ -6,8 +6,11 @@ import Indicator from './component/Indicator';
 import StoneNumber from './Interface/StoneNumber';
 import { Color } from './enum/StoneEnum';
 import Item from './component/Item';
+import ItemPlayer from './component/ItemPlayer';
 import { StoneSelection, StoneStack } from './Interface/Stone';
 import Turn from './Interface/Turn';
+
+
 
 function App() {
   const [board, setBoard] = useState<Stone[][][]>();
@@ -45,30 +48,35 @@ function App() {
   }, [stoneSelection])
   return (
     <div className='container-fluid'>
+      <div className="row atass">
+        <p className="judul ">TAK</p>
+      </div>
+      
       <div className="row">
-
-        <div className='col bg-success'>
+        
+        <div className='col backgroundcolor'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
               <Indicator stoneStack={stoneStack}></Indicator>
             </div>
             <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
-              {(stoneSelection.stoneDetail != undefined || stoneStack?.Stack != undefined) && <button className='btn btn-info' onClick={() => {
+              {(stoneSelection.stoneDetail != undefined || stoneStack?.Stack != undefined) && 
+              <button className='btn btn-danger tombolcancel' onClick={() => {
                 setStoneSelection({
                   isSelected: false,
                   stoneDetail: undefined
                 })
                 setStoneStack({X:-1, Y:-1, Stack:undefined});
                 setBoard(Cboard)
-              }}>cancel</button>}
-              <Item 
+              }}>Cancel</button>}
+              <ItemPlayer 
                 stoneNumber={whiteStoneNumber} 
                 setStoneSelection={setStoneSelection} 
                 stoneSelection={stoneSelection} 
                 stoneStack={stoneStack} setStoneStack={setStoneStack} 
                 turn={turn} setBoard={setBoard} board={board}
                 Cboard={Cboard} setCBoard={setCBoard}
-              ></Item>
+              ></ItemPlayer>
             </div>
           </div>
         </div>
@@ -89,7 +97,7 @@ function App() {
           ></Board>
         </div>
 
-        <div className='col bg-success'>
+        <div className='col backgroundcolor'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
               <Indicator stoneStack={stoneStack}></Indicator>
