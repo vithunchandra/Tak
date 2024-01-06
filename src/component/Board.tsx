@@ -1490,6 +1490,7 @@ export default function Board(
                         </div>
                     </div>
                     ))}
+                    <h2 className="col-1 margg" ></h2>
                 </div>
             </div>
         </div>
