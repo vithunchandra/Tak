@@ -66,3 +66,34 @@ body{
 .atass{
   background-color: #5DE23C;
 }
+
+.board-code {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  
+  justify-content: center;
+  font-weight: bold;
+  color:red;
+}
+
+.board-code-kiri {
+  width: 30px;
+  height: 30px;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color:black;
+}
+
+.board-column {
+  position: relative;
+}
+
+.board-code,
+.position-absolute {
+  position: absolute;
+}

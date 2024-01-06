@@ -2,11 +2,13 @@ export default class Stone {
     isCapStone: boolean = false;
     position: String = '';
     color: String = '';
+    isPinggirKiri: boolean = false;
 
-    constructor(position: String, isCapStone: boolean, color: String){
+    constructor(position: String, isCapStone: boolean, color: String, isPinggirKiri: boolean){
         this.isCapStone = isCapStone;
         this.position = position;
         this.color = color;
+        this.isPinggirKiri = isPinggirKiri;
     }
 
     printStone(index: string){

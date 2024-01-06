@@ -22,8 +22,8 @@ export default function Board(
     } : BoardDataInterface
     
 ){
-    const width: number = 700;
-    const height: number = 700;
+    const width: number = 800;
+    const height: number = 730;
     const size: number = 6;
     const temp: Stone[][][] = [];
     for(let i=0; i<size; i++){
@@ -1442,39 +1442,47 @@ export default function Board(
             }
         }
     }
-        
+    const columnCodes: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div className="p-5 border border-dark rounded rounded-4">
-            {
-                board && board.map((x, indexX) => {
-                    return (
-                        <div className="row justify-content-center mx-auto bg-secondary" style={{width: `${width}px`}} key={indexX.toString()}>
-                            {
-                                x.map((y, indexY) => {
-                                    return (
-                                        <div
-                                            className={`col-${12/board.length} position-relative d-flex align-items-center justify-content-center text-center border board-column`} 
-                                            style={{height: `${height/size}px`}}
-                                            key={`${indexX}${indexY}`}
-                                            data-x={indexX} data-y={indexY}
-                                            onClick={stoneSelection.isSelected ? placeStone : setIndicator}
-                                        >
-                                            {
-                                                y.map((z, indexZ) => {
-                                                    let idx = `${indexX}${indexY}${indexZ}`;
-                                                    return (
-                                                        z.printStone(idx)
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    )
-                                })
-                            }
+          <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
+            
+            {board && board.map((x, indexX) => (
+                <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} key={indexX.toString()}>
+                    <h2 className="col-2">{rowNumbers[indexX]}</h2>
+                    
+                    
+                    <div className="col-10">
+                        {x.map((y, indexY) => (
+                        
+                            <div
+                            className={`col-${12 / board.length} position-relative d-flex align-items-center justify-content-center text-center border board-column`}
+                            style={{ height: `${height / size}px` }}
+                            key={`${indexX}${indexY}`}
+                            data-x={indexX} data-y={indexY}
+                            onClick={stoneSelection.isSelected ? placeStone : setIndicator}
+                        >
+                            
+                            {y.map((z, indexZ) => {
+
+                                // <div className="col-12 d-flex">
+                                //  <div className="board-code">{columnCodes[indexZ]}</div>
+                            //   </div>
+                            let idx = `${indexX}${indexY}${indexZ}`;
+                            return (
+                                z.printStone(idx)
+                            )
+                            })}
                         </div>
-                    )
-                })
-            }
+
+
+                        ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-    )
+      )
+      
 }
