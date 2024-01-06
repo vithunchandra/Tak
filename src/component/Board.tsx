@@ -3,7 +3,8 @@ import Stone from "../class/Stone";
 import BoardDataInterface from "../Interface/BoardDataInterface";
 // import StoneNumber from "../Interface/StoneNumber";
 import { Color, Point, Position } from "../enum/StoneEnum";
-import { StoneStack } from "../Interface/Stone";
+import { StoneSelection, StoneStack } from "../Interface/Stone";
+import Turn from "../Interface/Turn";
 
 export default function Board(
     {
@@ -66,27 +67,19 @@ export default function Board(
         // console.log(terminal(cboard));
     }, [])
 
-    function move4Direction (tmp : StoneStack, temp : Stone[][][], x : number, y : number, getPoint : Point) {
-        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
-        setBoard(temp);
-        setStoneStack({
-            X: x,
-            Y: y,
-            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
-        });
-
-        setTurn({
-            firstMove: turn.firstMove,
-            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
-            point: tmp.Stack?.length == 0 ? undefined : getPoint
-        });
-
+    function AIMove (temp : Stone[][][], stoneSelection : StoneSelection, turn : Turn, stoneStack : StoneStack, deskripsiLastMove : string) {
         if((!turn.firstMove && turn.turn && !stoneStack.Stack?.length)){
-            if(terminal(temp)){
+            const checkTerminal_whiteTurn = terminal(temp);
+            if(checkTerminal_whiteTurn == Color.WHITE){
                 alert("White Won!!!")
+            }else if(checkTerminal_whiteTurn == Color.BLACK){
+                alert("Black Won!!!")
             }else{
-                minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber);
-                // console.log(nextMove);
+                if(deskripsiLastMove == "placeStone" && stoneSelection?.stoneDetail){
+                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1, blackStoneNumber.capStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber);
+                }else if(deskripsiLastMove == "move"){
+                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber);
+                }
                 setBoard(botMove.nextMove);
                 setWhiteStoneNumber({
                     flatStoneNumber: botMove.newStoneWhite,
@@ -104,11 +97,32 @@ export default function Board(
                     point: undefined
                 });
 
-                if(terminal(botMove.nextMove)){
+                const checkTerminal_blackTurn = terminal(botMove.nextMove);
+                if(checkTerminal_blackTurn == Color.WHITE){
+                    alert("White Won!!!")
+                }else if(checkTerminal_blackTurn == Color.BLACK){
                     alert("Black Won!!!")
                 }
             }
         }
+    }
+
+    function move4Direction (tmp : StoneStack, temp : Stone[][][], x : number, y : number, getPoint : Point) {
+        tmp.Stack && temp[x][y].push(tmp.Stack.splice(0, 1)[0]);
+        setBoard(temp);
+        setStoneStack({
+            X: x,
+            Y: y,
+            Stack: tmp.Stack?.length == 0 ? undefined : tmp.Stack
+        });
+
+        setTurn({
+            firstMove: turn.firstMove,
+            turn: tmp.Stack?.length == 0 ? !turn.turn : turn.turn,
+            point: tmp.Stack?.length == 0 ? undefined : getPoint
+        });
+
+        AIMove(temp, stoneSelection, turn, tmp, "move");
     }
 
     function copyBoard (board : Stone[][][]) {
@@ -139,16 +153,16 @@ export default function Board(
         for(let i = 0; i < board.length; i++){
             if(board[0][i].length != 0){
                 if(upToDown(board, 0, i, "")){
-                    return true;
+                    return board[0][i][board[0][i].length - 1].color;
                 }
             }
             if(board[i][0].length != 0){
                 if(leftToRight(board, i, 0, "")){
-                    return true;
+                    return board[i][0][board[i][0].length - 1].color;
                 }
             }
         }
-        return false;
+        return undefined;
     }
 
     function leftToRight(board: Stone[][][], rowIndex: number, colIndex: number, lastMove: string){
@@ -163,6 +177,10 @@ export default function Board(
         }
 
         const stone = board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1];
+        if(stone.position === Position.STAND){
+            return false;
+        }
+
         const stoneRight = board[rowIndex][colIndex + 1][
             board[rowIndex][colIndex + 1].length <= 0 ? 0 : board[rowIndex][colIndex + 1].length - 1
         ]
@@ -179,7 +197,7 @@ export default function Board(
         }
         if(rowIndex+1 < board.length && lastMove != "up"){
             const stoneDown = board[rowIndex + 1][colIndex][
-                board[rowIndex + 1][colIndex].length <= 0 ? 0 :  board[rowIndex + 1][colIndex].length - 1
+                board[rowIndex + 1][colIndex].length <= 0 ? 0 : board[rowIndex + 1][colIndex].length - 1
             ]
             if(stone.color === stoneDown?.color && stoneDown?.position === Position.FLAT){
                 return leftToRight(board, rowIndex + 1, colIndex, "down")
@@ -199,6 +217,10 @@ export default function Board(
         }
 
         const stone = board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1];
+        if(stone.position === Position.STAND){
+            return false;
+        }
+
         const stoneDown = board[rowIndex + 1][colIndex][
             board[rowIndex + 1][colIndex].length <= 0 ? 0 : board[rowIndex + 1][colIndex].length - 1
         ]
@@ -221,6 +243,16 @@ export default function Board(
                 return upToDown(board, rowIndex, colIndex + 1, "right")
             }
         }
+    }
+
+    function checkTerminalNode(board : Stone[][][], ply : number, alpha : number, beta : number) {
+        const checkTerminal = terminal(board);
+        if(checkTerminal === Color.WHITE){
+            return Number.MIN_SAFE_INTEGER;
+        }else if(checkTerminal === Color.BLACK){
+            return Number.MAX_SAFE_INTEGER;
+        }
+        return undefined
     }
 
     function setIndicator(event: React.MouseEvent<HTMLElement>){
@@ -293,34 +325,7 @@ export default function Board(
                                 point: tmp.Stack?.length == 0 ? undefined : turn.point
                             });
 
-                            if((!turn.firstMove && turn.turn && !stoneStack.Stack?.length)){
-                                if(terminal(temp)){
-                                    alert("White Won!!!")
-                                }else{
-                                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber);
-                                    // console.log(nextMove);
-                                    setBoard(botMove.nextMove);
-                                    setWhiteStoneNumber({
-                                        flatStoneNumber: botMove.newStoneWhite,
-                                        capStoneNumber: botMove.newCapStoneWhite,
-                                        color: Color.WHITE
-                                    })
-                                    setBlackStoneNumber({
-                                        flatStoneNumber: botMove.newStoneBlack,
-                                        capStoneNumber: botMove.newCapStoneBlack,
-                                        color: Color.BLACK
-                                    })
-                                    setTurn({
-                                        firstMove: turn.firstMove,
-                                        turn: turn.turn,
-                                        point: undefined
-                                    });
-
-                                    if(terminal(botMove.nextMove)){
-                                        alert("Black Won!!!")
-                                    }
-                                }
-                            }
+                            AIMove(temp, stoneSelection, turn, tmp, "move");
                         }
                     }else if((turn.point == Point.UP || turn.point == Point.CENTER) && getPoint == Point.UP){
                         // console.log("test up");
@@ -365,34 +370,7 @@ export default function Board(
                             point: tmp.Stack?.length == 0 ? undefined : getPoint
                         });
 
-                        if((!turn.firstMove && turn.turn && !stoneStack.Stack?.length)){
-                            if(terminal(temp)){
-                                alert("White Won!!!")
-                            }else{
-                                minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber);
-                                // console.log(nextMove);
-                                setBoard(botMove.nextMove);
-                                setWhiteStoneNumber({
-                                    flatStoneNumber: botMove.newStoneWhite,
-                                    capStoneNumber: botMove.newCapStoneWhite,
-                                    color: Color.WHITE
-                                })
-                                setBlackStoneNumber({
-                                    flatStoneNumber: botMove.newStoneBlack,
-                                    capStoneNumber: botMove.newCapStoneBlack,
-                                    color: Color.BLACK
-                                })
-                                setTurn({
-                                    firstMove: turn.firstMove,
-                                    turn: turn.turn,
-                                    point: undefined
-                                });
-
-                                if(terminal(botMove.nextMove)){
-                                    alert("Black Won!!!")
-                                }
-                            }
-                        }
+                        AIMove(temp, stoneSelection, turn, tmp, "move");
                     }
     
                 }
@@ -461,35 +439,7 @@ export default function Board(
                             point: undefined
                         });
     
-                        if((!turn.firstMove && turn.turn && !stoneStack.Stack?.length)){
-                            // console.log(temp);
-                            if(terminal(temp)){
-                                alert("White Won!!!")
-                            }else{
-                                minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1, blackStoneNumber.capStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber);
-                                // console.log(nextMove);
-                                setBoard(botMove.nextMove);
-                                setWhiteStoneNumber({
-                                    flatStoneNumber: botMove.newStoneWhite,
-                                    capStoneNumber: botMove.newCapStoneWhite,
-                                    color: Color.WHITE
-                                })
-                                setBlackStoneNumber({
-                                    flatStoneNumber: botMove.newStoneBlack,
-                                    capStoneNumber: botMove.newCapStoneBlack,
-                                    color: Color.BLACK
-                                })
-                                setTurn({
-                                    firstMove: turn.firstMove,
-                                    turn: turn.turn,
-                                    point: undefined
-                                });
-
-                                if(terminal(botMove.nextMove)){
-                                    alert("Black Won!!!")
-                                }
-                            }
-                        }
+                        AIMove(temp, stoneSelection, turn, stoneStack, "placeStone");
                     }
     
                     setStoneSelection({
@@ -802,13 +752,8 @@ export default function Board(
                 }
                 return value
             }else{
-                if(terminal(board)){
-                    if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                        return Number.MIN_VALUE;
-                    }else{
-                        return Number.MAX_VALUE;
-                    }
-                }
+                const val = checkTerminalNode(board, ply, alpha, beta);
+                if (val) {return val}
                 return staticBoardEvaluation(board)
             }
         }
@@ -840,14 +785,6 @@ export default function Board(
             const currentStack = newBoard[row][col]
             newBoard[row][col] = currentStack.concat(stack)
 
-            if(terminal(newBoard)){
-                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                    return Number.MIN_VALUE;
-                }else{
-                    return Number.MAX_VALUE;
-                }
-            }
-
             if(ply > 0){
                 let value = minimax(newBoard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone)
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
@@ -863,6 +800,8 @@ export default function Board(
                 }
                 return value
             }else{
+                const val = checkTerminalNode(newBoard, ply, alpha, beta)
+                if (val) {return val}
                 return staticBoardEvaluation(newBoard)
             }
         }
@@ -873,14 +812,6 @@ export default function Board(
             const currentStack = newBoard[row][col]
             newBoard[row][col] = currentStack.concat(stack)
 
-            if(terminal(newBoard)){
-                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                    return Number.MIN_VALUE;
-                }else{
-                    return Number.MAX_VALUE;
-                }
-            }
-
             if(ply > 0){
                 let value = minimax(newBoard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone)
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
@@ -896,6 +827,8 @@ export default function Board(
                 }
                 return value
             }else{
+                const val = checkTerminalNode(newBoard, ply, alpha, beta)
+                if (val) {return val}
                 return staticBoardEvaluation(newBoard)
             }
         }
@@ -978,13 +911,8 @@ export default function Board(
         // console.log(++test);
         // console.log(alpha, beta);
         // console.log(terminal(board));
-        if(terminal(board)){
-            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                return Number.MIN_VALUE;
-            }else{
-                return Number.MAX_VALUE;
-            }
-        }
+        const val = checkTerminalNode(board, ply, alpha, beta)
+        if (val) {return val}
 
         if(ply == 0){
             return staticBoardEvaluation(board);
