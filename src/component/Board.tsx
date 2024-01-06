@@ -54,9 +54,13 @@ export default function Board(
     }, [board, turn])
     useEffect(() => {
         // const cboard = copyBoard(temp);
-        // const stack = [new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK)]
-        // cboard[0][0] = stack;
-        // minimax(cboard, global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, 24, 30, 1, 1);
+        // const stack = [new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, true, Color.BLACK)]
+        // cboard[2][2] = stack;
+        // cboard[1][2] = [new Stone(Position.STAND, false, Color.BLACK)]
+        // cboard[2][3] = [new Stone(Position.FLAT, true, Color.BLACK)]
+        // cboard[3][2] = [new Stone(Position.STAND, false, Color.BLACK)]
+        // cboard[2][1] = [new Stone(Position.STAND, false, Color.BLACK)]
+        // minimax(cboard, global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, 23, 30, 0, 1);
         // console.log(botMove.nextMove);
         // cboard[0][0] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // cboard[0][1] = [new Stone(Position.FLAT, false, Color.BLACK)]
@@ -65,10 +69,11 @@ export default function Board(
         // cboard[0][4] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // cboard[0][5] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // console.log(terminal(cboard));
+        // console.log((1 < 5) !== (1 > 4))
     }, [])
 
     function AIMove (temp : Stone[][][], stoneSelection : StoneSelection, turn : Turn, stoneStack : StoneStack, deskripsiLastMove : string) {
-        if((!turn.firstMove && turn.turn && !stoneStack.Stack?.length)){
+        if((turn.firstMove ? !turn.turn : turn.turn && !stoneStack.Stack?.length)){
             const checkTerminal_whiteTurn = terminal(temp);
             if(checkTerminal_whiteTurn == Color.WHITE){
                 alert("White Won!!!")
@@ -76,9 +81,9 @@ export default function Board(
                 alert("Black Won!!!")
             }else{
                 if(deskripsiLastMove == "placeStone" && stoneSelection?.stoneDetail){
-                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1, blackStoneNumber.capStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber);
+                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1, blackStoneNumber.capStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber, turn.firstMove ? Color.WHITE : Color.BLACK);
                 }else if(deskripsiLastMove == "move"){
-                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber);
+                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber, turn.firstMove ? Color.WHITE : Color.BLACK);
                 }
                 setBoard(botMove.nextMove);
                 setWhiteStoneNumber({
@@ -92,8 +97,8 @@ export default function Board(
                     color: Color.BLACK
                 })
                 setTurn({
-                    firstMove: turn.firstMove,
-                    turn: turn.turn,
+                    firstMove: false,
+                    turn: turn.firstMove ? !turn.turn : turn.turn,
                     point: undefined
                 });
 
@@ -152,13 +157,17 @@ export default function Board(
     function terminal(board : Stone[][][]){
         for(let i = 0; i < board.length; i++){
             if(board[0][i].length != 0){
-                if(upToDown(board, 0, i, "")){
-                    return board[0][i][board[0][i].length - 1].color;
+                if(board[0][i][board[0][i].length - 1].position === Position.FLAT){
+                    if(upToDown(board, 0, i, "")){
+                        return board[0][i][board[0][i].length - 1].color;
+                    }
                 }
             }
             if(board[i][0].length != 0){
-                if(leftToRight(board, i, 0, "")){
-                    return board[i][0][board[i][0].length - 1].color;
+                if(board[i][0][board[i][0].length - 1].position === Position.FLAT){
+                    if(leftToRight(board, i, 0, "")){
+                        return board[i][0][board[i][0].length - 1].color;
+                    }
                 }
             }
         }
@@ -177,10 +186,6 @@ export default function Board(
         }
 
         const stone = board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1];
-        if(stone.position === Position.STAND){
-            return false;
-        }
-
         const stoneRight = board[rowIndex][colIndex + 1][
             board[rowIndex][colIndex + 1].length <= 0 ? 0 : board[rowIndex][colIndex + 1].length - 1
         ]
@@ -217,10 +222,6 @@ export default function Board(
         }
 
         const stone = board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1];
-        if(stone.position === Position.STAND){
-            return false;
-        }
-
         const stoneDown = board[rowIndex + 1][colIndex][
             board[rowIndex + 1][colIndex].length <= 0 ? 0 : board[rowIndex + 1][colIndex].length - 1
         ]
@@ -245,7 +246,7 @@ export default function Board(
         }
     }
 
-    function checkTerminalNode(board : Stone[][][], ply : number, alpha : number, beta : number) {
+    function checkTerminalNode(board : Stone[][][]) {
         const checkTerminal = terminal(board);
         if(checkTerminal === Color.WHITE){
             return Number.MIN_SAFE_INTEGER;
@@ -717,7 +718,7 @@ export default function Board(
     //     return scoreUp + scoreDown + scoreLeft + scoreRight
     // }
 
-    function unstack({board, alpha, beta, ply, direction, row, col, stack, isFirst, blackStone, whiteStone, blackCapStone, whiteCapStone}: {
+    function unstack({board, alpha, beta, ply, direction, row, col, stack, isFirst, blackStone, whiteStone, blackCapStone, whiteCapStone, turn}: {
         board: Stone[][][],
         alpha: number,
         beta: number,
@@ -730,7 +731,8 @@ export default function Board(
         blackStone: number,
         whiteStone: number,
         blackCapStone: number,
-        whiteCapStone: number
+        whiteCapStone: number,
+        turn : Color
     }){
         // console.log(board);
         // console.log(stack);
@@ -738,7 +740,7 @@ export default function Board(
 
         if(stack.length <= 0){
             if(ply > 0){
-                let value = minimax(board, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone)
+                let value = minimax(board, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn)
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     if(value > alpha) {
                         if(global_ply == ply){
@@ -752,7 +754,7 @@ export default function Board(
                 }
                 return value
             }else{
-                const val = checkTerminalNode(board, ply, alpha, beta);
+                const val = checkTerminalNode(board);
                 if (val) {return val}
                 return staticBoardEvaluation(board)
             }
@@ -762,7 +764,7 @@ export default function Board(
             const newBoard = copyBoard(board)
             const currentStack = newBoard[row][col]
             newBoard[row][col] = currentStack.concat(stack)
-            return unstack({board: newBoard, alpha, beta, ply, direction, row, col, stack: [], isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone})
+            return unstack({board: newBoard, alpha, beta, ply, direction, row, col, stack: [], isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
         }
 
         let rowDifference = 0
@@ -786,7 +788,7 @@ export default function Board(
             newBoard[row][col] = currentStack.concat(stack)
 
             if(ply > 0){
-                let value = minimax(newBoard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone)
+                let value = minimax(newBoard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn)
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     if(value > alpha) {
                         if(global_ply == ply){
@@ -800,7 +802,7 @@ export default function Board(
                 }
                 return value
             }else{
-                const val = checkTerminalNode(newBoard, ply, alpha, beta)
+                const val = checkTerminalNode(newBoard)
                 if (val) {return val}
                 return staticBoardEvaluation(newBoard)
             }
@@ -813,7 +815,7 @@ export default function Board(
             newBoard[row][col] = currentStack.concat(stack)
 
             if(ply > 0){
-                let value = minimax(newBoard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone)
+                let value = minimax(newBoard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn)
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     if(value > alpha) {
                         if(global_ply == ply){
@@ -827,7 +829,7 @@ export default function Board(
                 }
                 return value
             }else{
-                const val = checkTerminalNode(newBoard, ply, alpha, beta)
+                const val = checkTerminalNode(newBoard)
                 if (val) {return val}
                 return staticBoardEvaluation(newBoard)
             }
@@ -846,7 +848,7 @@ export default function Board(
 
             if(nextUpperStone && nextUpperStone.position === Position.STAND && !dividedLowerStone?.isCapStone){
                 newBoard[row][col] = currentStack.concat(dividedStack)
-                value = unstack({board: newBoard, alpha, beta, ply, direction, row: row + rowDifference, col: col + columnDifference, stack: [], isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone})
+                value = unstack({board: newBoard, alpha, beta, ply, direction, row: row + rowDifference, col: col + columnDifference, stack: [], isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     //max
                     if(value > alpha) {
@@ -865,7 +867,7 @@ export default function Board(
                 nextUpperStone.position = Position.FLAT
                 newBoard[row + rowDifference][col + columnDifference] = nextStack.concat(dividedStack)
                 newBoard[row][col] = currentStack.concat(newStack)
-                value = unstack({board: newBoard, alpha, beta, ply, direction, row: row + rowDifference, col: col + columnDifference, stack: [], isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone})
+                value = unstack({board: newBoard, alpha, beta, ply, direction, row: row + rowDifference, col: col + columnDifference, stack: [], isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     //max
                     if(value > alpha) {
@@ -882,7 +884,7 @@ export default function Board(
                 }
             }else{
                 newBoard[row][col] = currentStack.concat(newStack)
-                value = unstack({board: newBoard, alpha, beta, ply, direction, row: row + rowDifference, col: col + columnDifference, stack: dividedStack, isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone})
+                value = unstack({board: newBoard, alpha, beta, ply, direction, row: row + rowDifference, col: col + columnDifference, stack: dividedStack, isFirst: false, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     //max
                     if(value > alpha) {
@@ -906,14 +908,14 @@ export default function Board(
         }
     }
     
-    function minimax (board : Stone[][][], ply : number, alpha : number, beta : number, blackStone : number, whiteStone : number, blackCapStone : number, whiteCapStone : number) {
+    function minimax (board : Stone[][][], ply : number, alpha : number, beta : number, blackStone : number, whiteStone : number, blackCapStone : number, whiteCapStone : number, turn : Color) {
         // console.log(board, blackStone, whiteStone, blackCapStone, whiteCapStone);
         // console.log(++test);
         // console.log(alpha, beta);
         // console.log(terminal(board));
-        const val = checkTerminalNode(board, ply, alpha, beta)
+        const val = checkTerminalNode(board)
         if (val) {return val}
-
+        
         if(ply == 0){
             return staticBoardEvaluation(board);
         }else{
@@ -924,15 +926,15 @@ export default function Board(
                     const kolom = board[i][j];
                     if(kolom.length == 0){
                         // place stone
-                        if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? (blackStone > 0) : (whiteStone > 0)){
+                        if((((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? (blackStone > 0) : (whiteStone > 0)){
                             // stone
                             let nblackStone = blackStone;
                             let nwhiteStone = whiteStone;
-                            (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? nblackStone-- : nwhiteStone--;
+                            (((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? nblackStone-- : nwhiteStone--;
                             // position flat
                             let nboard = copyBoard(board);
-                            nboard[i][j].push(new Stone(Position.FLAT, false, (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE));
-                            value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone);
+                            nboard[i][j].push(new Stone(Position.FLAT, false, (((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? Color.BLACK : Color.WHITE));
+                            value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone, turn);
                             if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                                 //max
                                 if(value > alpha) {
@@ -959,8 +961,8 @@ export default function Board(
 
                             // position stand
                             nboard = copyBoard(board);
-                            nboard[i][j].push(new Stone(Position.STAND, false, (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE));
-                            value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone);
+                            nboard[i][j].push(new Stone(Position.STAND, false, (((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? Color.BLACK : Color.WHITE));
+                            value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone, turn);
                             if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                                 //max
                                 if(value > alpha) {
@@ -984,112 +986,382 @@ export default function Board(
                                 break
                             }
                         }
-                        if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? (blackCapStone > 0) : (whiteCapStone > 0)){
-                            //cap stone
-                            let nblackCapStone = blackCapStone;
-                            let nwhiteCapStone = whiteCapStone;
-                            (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? nblackCapStone-- : nwhiteCapStone--;
-
-                            const nboard = copyBoard(board);
-                            nboard[i][j].push(new Stone(Position.FLAT, true, (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE));
-                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, nblackCapStone, nwhiteCapStone);
-                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                //max
-                                if(value > alpha) {
-                                    alpha = value
-                                    //save move
-                                    if(global_ply == ply){
-                                        botMove.nextMove = copyBoard(nboard);
-                                        botMove.newStoneWhite = whiteStone;
-                                        botMove.newStoneBlack = blackStone;
-                                        botMove.newCapStoneWhite = nwhiteCapStone;
-                                        botMove.newCapStoneBlack = nblackCapStone;
+                        if(turn != Color.WHITE){
+                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? (blackCapStone > 0) : (whiteCapStone > 0)){
+                                //cap stone
+                                let nblackCapStone = blackCapStone;
+                                let nwhiteCapStone = whiteCapStone;
+                                (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? nblackCapStone-- : nwhiteCapStone--;
+    
+                                const nboard = copyBoard(board);
+                                nboard[i][j].push(new Stone(Position.FLAT, true, (global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE));
+                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, nblackCapStone, nwhiteCapStone, turn);
+                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                    //max
+                                    if(value > alpha) {
+                                        alpha = value
+                                        //save move
+                                        if(global_ply == ply){
+                                            botMove.nextMove = copyBoard(nboard);
+                                            botMove.newStoneWhite = whiteStone;
+                                            botMove.newStoneBlack = blackStone;
+                                            botMove.newCapStoneWhite = nwhiteCapStone;
+                                            botMove.newCapStoneBlack = nblackCapStone;
+                                        }
+                                    }
+                                }else{
+                                    //min
+                                    if(value < beta) {
+                                        beta = value
                                     }
                                 }
-                            }else{
-                                //min
-                                if(value < beta) {
-                                    beta = value
+                                if(alpha >= beta){
+                                    break
                                 }
-                            }
-                            if(alpha >= beta){
-                                break
                             }
                         }
                     }else{
-                        if(kolom.length == 1){
-                            // move just one stone
-                            if(!kolom[0].isCapStone){
-                                // move for non cap stone (can be position flat or stand)
-                                if(kolom[0].color == ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE)){
-                                    // up
-                                    if(i-1 >= 0){
-                                        let lanjut = false;
-                                        if(board[i-1][j].length == 0){
-                                            lanjut = true
-                                        }else if(board[i-1][j][board[i-1][j].length-1].position == Position.FLAT && !board[i-1][j][board[i-1][j].length-1].isCapStone){
-                                            lanjut = true
-                                        }
-                                        if(lanjut){
-                                            let nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            nboard[i-1][j].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
-                                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                                //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
+                        if(turn != Color.WHITE){
+                            if(kolom.length == 1){
+                                // move just one stone
+                                if(!kolom[0].isCapStone){
+                                    // move for non cap stone (can be position flat or stand)
+                                    if(kolom[0].color == ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE)){
+                                        // up
+                                        if(i-1 >= 0){
+                                            let lanjut = false;
+                                            if(board[i-1][j].length == 0){
+                                                lanjut = true
+                                            }else if(board[i-1][j][board[i-1][j].length-1].position == Position.FLAT && !board[i-1][j][board[i-1][j].length-1].isCapStone){
+                                                lanjut = true
+                                            }
+                                            if(lanjut){
+                                                let nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                nboard[i-1][j].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        beta = value
                                                     }
                                                 }
-                                            }else{
-                                                //min
-                                                if(value < beta) {
-                                                    beta = value
+                                                if(alpha >= beta){
+                                                    break
                                                 }
                                             }
-                                            if(alpha >= beta){
-                                                break
+                                        }
+                                        //right
+                                        if(j+1 < board.length){
+                                            let lanjut = false;
+                                            if(board[i][j+1].length == 0){
+                                                lanjut = true
+                                            }else if(board[i][j+1][board[i][j+1].length-1].position == Position.FLAT && !board[i][j+1][board[i][j+1].length-1].isCapStone){
+                                                lanjut = true
+                                            }
+                                            if(lanjut){
+                                                let nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                nboard[i][j+1].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        beta = value
+                                                    }
+                                                }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        // down
+                                        if(i+1 < board.length){
+                                            let lanjut = false;
+                                            if(board[i+1][j].length == 0){
+                                                lanjut = true
+                                            }else if(board[i+1][j][board[i+1][j].length-1].position == Position.FLAT && !board[i+1][j][board[i+1][j].length-1].isCapStone){
+                                                lanjut = true
+                                            }
+                                            if(lanjut){
+                                                let nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                nboard[i+1][j].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        //save move
+                                                        beta = value
+                                                    }
+                                                }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        // left
+                                        if(j-1 >= 0){
+                                            let lanjut = false;
+                                            if(board[i][j-1].length == 0){
+                                                lanjut = true
+                                            }else if(board[i][j-1][board[i][j-1].length-1].position == Position.FLAT && !board[i][j-1][board[i][j-1].length-1].isCapStone){
+                                                lanjut = true
+                                            }
+                                            if(lanjut){
+                                                let nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                nboard[i][j-1].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        //save move
+                                                        beta = value
+                                                    }
+                                                }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
                                             }
                                         }
                                     }
-                                    //right
-                                    if(j+1 < board.length){
-                                        let lanjut = false;
-                                        if(board[i][j+1].length == 0){
-                                            lanjut = true
-                                        }else if(board[i][j+1][board[i][j+1].length-1].position == Position.FLAT && !board[i][j+1][board[i][j+1].length-1].isCapStone){
-                                            lanjut = true
-                                        }
-                                        if(lanjut){
-                                            let nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            nboard[i][j+1].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
-                                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                                //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
+                                }else{
+                                    // move for cap stone
+                                    if(kolom[0].color == ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE)){
+                                        // up
+                                        if(i-1 >= 0){
+                                            let lanjut = true;
+                                            if(board[i-1][j].length != 0 && board[i-1][j][board[i-1][j].length-1].isCapStone){
+                                                lanjut = false
+                                            }
+                                            if(lanjut){
+                                                const nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                if(board[i-1][j].length != 0 && board[i-1][j][board[i-1][j].length-1].position == Position.STAND){
+                                                    nboard[i-1][j][nboard[i-1][j].length-1].position = Position.FLAT
+                                                }
+                                                nboard[i-1][j].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        beta = value
                                                     }
                                                 }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        // right
+                                        if(j+1 < board.length){
+                                            let lanjut = true;
+                                            if(board[i][j+1].length != 0 && board[i][j+1][board[i][j+1].length-1].isCapStone){
+                                                lanjut = false
+                                            }
+                                            if(lanjut){
+                                                const nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                if(board[i][j+1].length != 0 && board[i][j+1][board[i][j+1].length-1].position == Position.STAND){
+                                                    nboard[i][j+1][nboard[i][j+1].length-1].position = Position.FLAT
+                                                }
+                                                nboard[i][j+1].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        beta = value
+                                                    }
+                                                }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        // down
+                                        if(i+1 < board.length){
+                                            let lanjut = true;
+                                            if(board[i+1][j].length != 0 && board[i+1][j][board[i+1][j].length-1].isCapStone){
+                                                lanjut = false
+                                            }
+                                            if(lanjut){
+                                                const nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                if(board[i+1][j].length != 0 && board[i+1][j][board[i+1][j].length-1].position == Position.STAND){
+                                                    nboard[i+1][j][nboard[i+1][j].length-1].position = Position.FLAT
+                                                }
+                                                nboard[i+1][j].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        beta = value
+                                                    }
+                                                }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        // left
+                                        if(j-1 >= 0){
+                                            let lanjut = true;
+                                            if(board[i][j-1].length != 0 && board[i][j-1][board[i][j-1].length-1].isCapStone){
+                                                lanjut = false
+                                            }
+                                            if(lanjut){
+                                                const nboard = copyBoard(board);
+                                                let piece = nboard[i][j].pop();
+                                                if(board[i][j-1].length != 0 && board[i][j-1][board[i][j-1].length-1].position == Position.STAND){
+                                                    nboard[i][j-1][nboard[i][j-1].length-1].position = Position.FLAT
+                                                }
+                                                nboard[i][j-1].push(piece);
+                                                value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone, turn);
+                                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                    //max
+                                                    if(value > alpha) {
+                                                        alpha = value
+                                                        //save move
+                                                        if(global_ply == ply){
+                                                            botMove.nextMove = copyBoard(nboard);
+                                                            botMove.newStoneWhite = whiteStone;
+                                                            botMove.newStoneBlack = blackStone;
+                                                            botMove.newCapStoneWhite = whiteCapStone;
+                                                            botMove.newCapStoneBlack = blackCapStone;
+                                                        }
+                                                    }
+                                                }else{
+                                                    //min
+                                                    if(value < beta) {
+                                                        beta = value
+                                                    }
+                                                }
+                                                if(alpha >= beta){
+                                                    break
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                // move unstack (more than one stone)
+                                if(kolom[kolom.length - 1].color == ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE)){
+                                    const nboard = copyBoard(board);
+                                    nboard[i][j] = []
+                                    // up
+                                    if(i-1 >= 0){
+                                        let lanjut = false
+                                        if(board[i-1][j].length == 0){
+                                            lanjut = true
+                                        }else if(board[i-1][j][board[i-1][j].length - 1].position == Position.STAND){
+                                            if(board[i][j][board[i][j].length - 1].isCapStone){
+                                                lanjut = true
+                                            }
+                                        }else if(!board[i-1][j][board[i-1][j].length - 1].isCapStone){
+                                            lanjut = true
+                                        }
+    
+                                        if(lanjut){
+                                            // console.log("masuk up");
+                                            value = unstack({board: nboard, alpha, beta, ply, direction: Point.UP, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
+                                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                                //max
+                                                alpha = value
                                             }else{
                                                 //min
-                                                if(value < beta) {
-                                                    beta = value
-                                                }
+                                                beta = value
                                             }
                                             if(alpha >= beta){
                                                 break
@@ -1098,36 +1370,26 @@ export default function Board(
                                     }
                                     // down
                                     if(i+1 < board.length){
-                                        let lanjut = false;
+                                        let lanjut = false
                                         if(board[i+1][j].length == 0){
                                             lanjut = true
-                                        }else if(board[i+1][j][board[i+1][j].length-1].position == Position.FLAT && !board[i+1][j][board[i+1][j].length-1].isCapStone){
+                                        }else if(board[i+1][j][board[i+1][j].length - 1].position == Position.STAND){
+                                            if(board[i][j][board[i][j].length - 1].isCapStone){
+                                                lanjut = true
+                                            }
+                                        }else if(!board[i+1][j][board[i+1][j].length - 1].isCapStone){
                                             lanjut = true
                                         }
+    
                                         if(lanjut){
-                                            let nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            nboard[i+1][j].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
+                                            // console.log("masuk down");
+                                            value = unstack({board: nboard, alpha, beta, ply, direction: Point.DOWN, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
                                             if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                                                 //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
-                                                    }
-                                                }
+                                                alpha = value
                                             }else{
                                                 //min
-                                                if(value < beta) {
-                                                    //save move
-                                                    beta = value
-                                                }
+                                                beta = value
                                             }
                                             if(alpha >= beta){
                                                 break
@@ -1136,78 +1398,26 @@ export default function Board(
                                     }
                                     // left
                                     if(j-1 >= 0){
-                                        let lanjut = false;
+                                        let lanjut = false
                                         if(board[i][j-1].length == 0){
                                             lanjut = true
-                                        }else if(board[i][j-1][board[i][j-1].length-1].position == Position.FLAT && !board[i][j-1][board[i][j-1].length-1].isCapStone){
+                                        }else if(board[i][j-1][board[i][j-1].length - 1].position == Position.STAND){
+                                            if(board[i][j][board[i][j].length - 1].isCapStone){
+                                                lanjut = true
+                                            }
+                                        }else if(!board[i][j-1][board[i][j-1].length - 1].isCapStone){
                                             lanjut = true
                                         }
+    
                                         if(lanjut){
-                                            let nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            nboard[i][j-1].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
+                                            // console.log("masuk left");
+                                            value = unstack({board: nboard, alpha, beta, ply, direction: Point.LEFT, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
                                             if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                                                 //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
-                                                    }
-                                                }
+                                                alpha = value
                                             }else{
                                                 //min
-                                                if(value < beta) {
-                                                    //save move
-                                                    beta = value
-                                                }
-                                            }
-                                            if(alpha >= beta){
-                                                break
-                                            }
-                                        }
-                                    }
-                                }
-                            }else{
-                                // move for cap stone
-                                if(kolom[0].color == ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE)){
-                                    // up
-                                    if(i-1 >= 0){
-                                        let lanjut = true;
-                                        if(board[i-1][j].length != 0 && board[i-1][j][board[i-1][j].length-1].isCapStone){
-                                            lanjut = false
-                                        }
-                                        if(lanjut){
-                                            const nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            if(board[i-1][j].length != 0 && board[i-1][j][board[i-1][j].length-1].position == Position.STAND){
-                                                nboard[i-1][j][nboard[i-1][j].length-1].position = Position.FLAT
-                                            }
-                                            nboard[i-1][j].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
-                                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                                //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
-                                                    }
-                                                }
-                                            }else{
-                                                //min
-                                                if(value < beta) {
-                                                    beta = value
-                                                }
+                                                beta = value
                                             }
                                             if(alpha >= beta){
                                                 break
@@ -1216,215 +1426,31 @@ export default function Board(
                                     }
                                     // right
                                     if(j+1 < board.length){
-                                        let lanjut = true;
-                                        if(board[i][j+1].length != 0 && board[i][j+1][board[i][j+1].length-1].isCapStone){
-                                            lanjut = false
-                                        }
-                                        if(lanjut){
-                                            const nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            if(board[i][j+1].length != 0 && board[i][j+1][board[i][j+1].length-1].position == Position.STAND){
-                                                nboard[i][j+1][nboard[i][j+1].length-1].position = Position.FLAT
+                                        let lanjut = false
+                                        if(board[i][j+1].length == 0){
+                                            lanjut = true
+                                        }else if(board[i][j+1][board[i][j+1].length - 1].position == Position.STAND){
+                                            if(board[i][j][board[i][j].length - 1].isCapStone){
+                                                lanjut = true
                                             }
-                                            nboard[i][j+1].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
+                                        }else if(!board[i][j+1][board[i][j+1].length - 1].isCapStone){
+                                            lanjut = true
+                                        }
+                                        
+                                        if(lanjut){
+                                            // console.log("masuk right");
+                                            value = unstack({board: nboard, alpha, beta, ply, direction: Point.RIGHT, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone, turn})
                                             if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                                                 //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
-                                                    }
-                                                }
+                                                alpha = value
                                             }else{
                                                 //min
-                                                if(value < beta) {
-                                                    beta = value
-                                                }
+                                                beta = value
                                             }
                                             if(alpha >= beta){
                                                 break
                                             }
                                         }
-                                    }
-                                    // down
-                                    if(i+1 < board.length){
-                                        let lanjut = true;
-                                        if(board[i+1][j].length != 0 && board[i+1][j][board[i+1][j].length-1].isCapStone){
-                                            lanjut = false
-                                        }
-                                        if(lanjut){
-                                            const nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            if(board[i+1][j].length != 0 && board[i+1][j][board[i+1][j].length-1].position == Position.STAND){
-                                                nboard[i+1][j][nboard[i+1][j].length-1].position = Position.FLAT
-                                            }
-                                            nboard[i+1][j].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
-                                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                                //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
-                                                    }
-                                                }
-                                            }else{
-                                                //min
-                                                if(value < beta) {
-                                                    beta = value
-                                                }
-                                            }
-                                            if(alpha >= beta){
-                                                break
-                                            }
-                                        }
-                                    }
-                                    // left
-                                    if(j-1 >= 0){
-                                        let lanjut = true;
-                                        if(board[i][j-1].length != 0 && board[i][j-1][board[i][j-1].length-1].isCapStone){
-                                            lanjut = false
-                                        }
-                                        if(lanjut){
-                                            const nboard = copyBoard(board);
-                                            let piece = nboard[i][j].pop();
-                                            if(board[i][j-1].length != 0 && board[i][j-1][board[i][j-1].length-1].position == Position.STAND){
-                                                nboard[i][j-1][nboard[i][j-1].length-1].position = Position.FLAT
-                                            }
-                                            nboard[i][j-1].push(piece);
-                                            value = minimax(nboard, ply-1, alpha, beta, blackStone, whiteStone, blackCapStone, whiteCapStone);
-                                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                                //max
-                                                if(value > alpha) {
-                                                    alpha = value
-                                                    //save move
-                                                    if(global_ply == ply){
-                                                        botMove.nextMove = copyBoard(nboard);
-                                                        botMove.newStoneWhite = whiteStone;
-                                                        botMove.newStoneBlack = blackStone;
-                                                        botMove.newCapStoneWhite = whiteCapStone;
-                                                        botMove.newCapStoneBlack = blackCapStone;
-                                                    }
-                                                }
-                                            }else{
-                                                //min
-                                                if(value < beta) {
-                                                    beta = value
-                                                }
-                                            }
-                                            if(alpha >= beta){
-                                                break
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }else{
-                            // move unstack (more than one stone)
-                            if(kolom[kolom.length - 1].color == ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0 ? Color.BLACK : Color.WHITE)){
-                                const nboard = copyBoard(board);
-                                nboard[i][j] = []
-
-                                // up
-                                if(
-                                    i-1 >= 0 && 
-                                    (!board[i-1][j][board[i-1][j].length - 1 < 0 ? 0 : board[i-1][j].length - 1]?.isCapStone || 
-                                    (
-                                        board[i][j][board[i][j].length - 1].isCapStone && 
-                                        board[i-1][j][board[i-1][j].length - 1 < 0 ? 0 : board[i-1][j].length - 1]?.position == Position.STAND
-                                    ))
-                                ){
-                                    // console.log("masuk up");
-                                    value = unstack({board: nboard, alpha, beta, ply, direction: Point.UP, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone})
-                                    if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                        //max
-                                        alpha = value
-                                    }else{
-                                        //min
-                                        beta = value
-                                    }
-                                    if(alpha >= beta){
-                                        break
-                                    }
-                                }
-
-                                // down
-                                if(
-                                    i+1 < board.length && 
-                                    (!board[i+1][j][board[i+1][j].length - 1 < 0 ? 0 : board[i+1][j].length - 1]?.isCapStone || 
-                                    (
-                                        board[i][j][board[i][j].length - 1].isCapStone && 
-                                        board[i+1][j][board[i+1][j].length - 1 < 0 ? 0 : board[i+1][j].length - 1]?.position == Position.STAND
-                                    ))
-                                ){
-                                    // console.log("masuk down");
-                                    value = unstack({board: nboard, alpha, beta, ply, direction: Point.DOWN, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone})
-                                    if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                        //max
-                                        alpha = value
-                                    }else{
-                                        //min
-                                        beta = value
-                                    }
-                                    if(alpha >= beta){
-                                        break
-                                    }
-                                }
-
-                                // left
-                                if(
-                                    j-1 >= 0 && 
-                                    (!board[i][j-1][board[i][j-1].length - 1 < 0 ? 0 : board[i][j-1].length - 1]?.isCapStone || 
-                                    (
-                                        board[i][j][board[i][j].length - 1].isCapStone && 
-                                        board[i][j-1][board[i][j-1].length - 1 < 0 ? 0 : board[i][j-1].length - 1]?.position == Position.STAND
-                                    ))
-                                ){
-                                    // console.log("masuk left");
-                                    value = unstack({board: nboard, alpha, beta, ply, direction: Point.LEFT, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone})
-                                    if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                        //max
-                                        alpha = value
-                                    }else{
-                                        //min
-                                        beta = value
-                                    }
-                                    if(alpha >= beta){
-                                        break
-                                    }
-                                }
-
-                                // right
-                                if(
-                                    j+1 < board.length && 
-                                    (!board[i][j+1][board[i][j+1].length - 1 < 0 ? 0 : board[i][j+1].length - 1]?.isCapStone || 
-                                    (
-                                        board[i][j][board[i][j].length - 1].isCapStone && 
-                                        board[i][j+1][board[i][j+1].length - 1 < 0 ? 0 : board[i][j+1].length - 1]?.position == Position.STAND
-                                    ))
-                                ){
-                                    // console.log("masuk right");
-                                    value = unstack({board: nboard, alpha, beta, ply, direction: Point.RIGHT, row: i, col: j, stack: board[i][j].slice(), isFirst: true, blackStone, whiteStone, blackCapStone, whiteCapStone})
-                                    if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                        //max
-                                        alpha = value
-                                    }else{
-                                        //min
-                                        beta = value
-                                    }
-                                    if(alpha >= beta){
-                                        break
                                     }
                                 }
                             }
