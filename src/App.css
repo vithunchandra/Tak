@@ -52,10 +52,13 @@ body{
 
 }
 .judul{
+  background-color: #3776A1;
   text-align: center;
   color: black;
   font-weight: bolder ;
+  font-size: 50px;
   font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: -5px;
 }
 .judul1{
   text-align: center;
@@ -66,7 +69,9 @@ body{
 .atass{
   background-color: #5DE23C;
 }
-
+.backgroundcolor{
+  background-color: #6EB1D6;
+}
 .board-code {
   width: 30px;
   height: 30px;
@@ -100,4 +105,8 @@ body{
 .margg{
   padding-top: 25px;
   padding-right: 15px;
+}
+.warna{
+  background-color: #F6E3BA;
+  border:black 1px solid;
 }

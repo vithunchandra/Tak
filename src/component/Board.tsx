@@ -1469,7 +1469,7 @@ export default function Board(
                             <div className="row col-10">
                                 {x.map((y, indexY) => (
                                     <div
-                                        className={`col-2 position-relative d-flex align-items-center justify-content-center text-center border board-column`}
+                                        className={`col-2 position-relative d-flex align-items-center justify-content-center text-center warna  board-column`}
                                         style={{ height: `${height / size}px` }}
                                         key={`${indexX}${indexY}`}
                                         data-x={indexX} data-y={indexY}

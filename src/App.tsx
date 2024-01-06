@@ -46,14 +46,14 @@ function App() {
   return (
     <div className='container-fluid'>
       <div className="row atass">
-        <h1 className="judul ">Tak</h1>
+        <p className="judul ">Tak</p>
       </div>
-      <div className="row bg-success atas">
+      <div className="row backgroundcolor atas">
         <h2 className="judul1">{} Turn</h2>
       </div>
       <div className="row">
         
-        <div className='col bg-success'>
+        <div className='col backgroundcolor'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
               <Indicator stoneStack={stoneStack}></Indicator>
@@ -95,7 +95,7 @@ function App() {
           ></Board>
         </div>
 
-        <div className='col bg-success'>
+        <div className='col backgroundcolor'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
               <Indicator stoneStack={stoneStack}></Indicator>
