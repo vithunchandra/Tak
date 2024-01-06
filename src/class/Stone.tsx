@@ -2,13 +2,11 @@ export default class Stone {
     isCapStone: boolean = false;
     position: String = '';
     color: String = '';
-    isPinggirKiri: boolean = false;
 
-    constructor(position: String, isCapStone: boolean, color: String, isPinggirKiri: boolean){
+    constructor(position: String, isCapStone: boolean, color: String){
         this.isCapStone = isCapStone;
         this.position = position;
         this.color = color;
-        this.isPinggirKiri = isPinggirKiri;
     }
 
     printStone(index: string){
@@ -17,7 +15,7 @@ export default class Stone {
                     zIndex: `${index}`
                 }}
             ></div> :
-            <div className={`position-absolute left-0 top-0  ${this.color}-stone ${this.position}-stone`} key={index} style={{
+            <div className={`position-absolute left-0 top-0  ${this.color}-stone ${this.position}-stone tengah`} key={index} style={{
                 zIndex: `${index}`
             }}></div>
     }
