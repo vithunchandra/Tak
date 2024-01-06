@@ -22,6 +22,7 @@ export default function Board(
     } : BoardDataInterface
     
 ){
+    let turnind: boolean = true;
     const width: number = 800;
     const height: number = 700;
     const size: number = 6;
@@ -248,8 +249,10 @@ export default function Board(
     function checkTerminalNode(board : Stone[][][], ply : number, alpha : number, beta : number) {
         const checkTerminal = terminal(board);
         if(checkTerminal === Color.WHITE){
+            turnind = true;
             return Number.MIN_SAFE_INTEGER;
         }else if(checkTerminal === Color.BLACK){
+            turnind = false;
             return Number.MAX_SAFE_INTEGER;
         }
         return undefined
@@ -410,7 +413,8 @@ export default function Board(
                                 flatStoneNumber: stoneSelection.stoneDetail.isCapstone ? blackStoneNumber.flatStoneNumber : blackStoneNumber.flatStoneNumber - 1,
                                 color: stoneSelection.stoneDetail.color
                             }
-                        )
+                            )
+                            
                     }else{
                         setWhiteStoneNumber(
                             {
@@ -419,6 +423,7 @@ export default function Board(
                                 color: stoneSelection.stoneDetail.color
                             }
                         )
+                      
                     }
                     const temp = copyBoard(board);
                     board && stoneSelection.stoneDetail && temp[x][y].push(
@@ -1445,52 +1450,63 @@ export default function Board(
     const columnCodes: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
-        <div className="p-5 border border-dark rounded rounded-4">
-            <div className=" justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
-                <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} >
-                    <h2 className="col-1 margg" ></h2>
-                    <div className="row col-10">
-                        {columnCodes.map((y, indexY) => (
-                            <div
-                                className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
-                                style={{ height: `${height / size}px` }}
-                                key={`${indexY}`}
-                            >
-                                <h2>{y}</h2>
-                            </div>
-                            
-                        ))}
-                        
-                    </div>
-                
-                    {board && board.map((x, indexX) => (
-                        <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} key={indexX.toString()}>
-                            <h2 className="col-1 margg" >{rowNumbers[indexX]}</h2>
-                            <div className="row col-10">
-                                {x.map((y, indexY) => (
-                                    <div
-                                        className={`col-2 position-relative d-flex align-items-center justify-content-center text-center warna  board-column`}
-                                        style={{ height: `${height / size}px` }}
-                                        key={`${indexX}${indexY}`}
-                                        data-x={indexX} data-y={indexY}
-                                        onClick={stoneSelection.isSelected ? placeStone : setIndicator}
-                                    >
-                                        
-                                        {y.map((z, indexZ) => {
+        <div className="">
+            {(turnind === false) && 
+             <div className="row backgroundcolor atas">
+                <p className="judul1">Black Turn !</p>
+            </div> }
+            {(turnind === true) && 
+             <div className="row backgroundcolor atas">
+                <p className="judul2">White Turn !</p>
+            </div> }
 
-                                        
-                                        let idx = `${indexX}${indexY}${indexZ}`;
-                                        return (
-                                            z.printStone(idx)
-                                        )
-                                        })}
-                                    </div>
-                                    
-                                ))}
+            <div className="p-5 border border-dark rounded rounded-4">
+                <div className=" justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
+                    <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} >
+                        <h2 className="col-1 margg" ></h2>
+                        <div className="row jaraks col-10">
+                            {columnCodes.map((y, indexY) => (
+                                <div
+                                    className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
+                                    style={{ height: `${height / size}px` }}
+                                    key={`${indexY}`}
+                                >
+                                    <h2>{y}</h2>
+                                </div>
+                                
+                            ))}
+                            
                         </div>
+                    
+                        {board && board.map((x, indexX) => (
+                            <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} key={indexX.toString()}>
+                                <h2 className="col-1 margg" >{rowNumbers[indexX]}</h2>
+                                <div className="row col-10">
+                                    {x.map((y, indexY) => (
+                                        <div
+                                            className={`col-2 position-relative d-flex align-items-center justify-content-center text-center warna  board-column`}
+                                            style={{ height: `${height / size}px` }}
+                                            key={`${indexX}${indexY}`}
+                                            data-x={indexX} data-y={indexY}
+                                            onClick={stoneSelection.isSelected ? placeStone : setIndicator}
+                                        >
+                                            
+                                            {y.map((z, indexZ) => {
+
+                                            
+                                            let idx = `${indexX}${indexY}${indexZ}`;
+                                            return (
+                                                z.printStone(idx)
+                                            )
+                                            })}
+                                        </div>
+                                        
+                                    ))}
+                            </div>
+                        </div>
+                        ))}
+                        <h2 className="col-1 margg" ></h2>
                     </div>
-                    ))}
-                    <h2 className="col-1 margg" ></h2>
                 </div>
             </div>
         </div>

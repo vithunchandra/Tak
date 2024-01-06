@@ -10,6 +10,8 @@ import ItemPlayer from './component/ItemPlayer';
 import { StoneSelection, StoneStack } from './Interface/Stone';
 import Turn from './Interface/Turn';
 
+
+
 function App() {
   const [board, setBoard] = useState<Stone[][][]>();
   const [Cboard, setCBoard] = useState<Stone[][][]>();
@@ -49,9 +51,7 @@ function App() {
       <div className="row atass">
         <p className="judul ">TAK</p>
       </div>
-      <div className="row backgroundcolor atas">
-        <h2 className="judul1">{} Turn</h2>
-      </div>
+      
       <div className="row">
         
         <div className='col backgroundcolor'>
