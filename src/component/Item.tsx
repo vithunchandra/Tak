@@ -95,7 +95,7 @@ export default function Item(
                     }
                 </div>
                 <div className="col-6 d-flex align-items-center">
-                    <h2 className="fw-bold">{stoneNumber.flatStoneNumber}</h2>
+                    <h2 className="fw-bold textc">{stoneNumber.flatStoneNumber}</h2>
                 </div>
             </div><br />
             <div className="row text-center">
@@ -108,7 +108,7 @@ export default function Item(
                     }} data-iscapstone="true" data-color={stoneNumber.color} onClick={selectStone}></div>
                 </div>
                 <div className="col d-flex align-items-center">
-                    <h2 className="fw-bold">{stoneNumber.capStoneNumber}</h2>
+                    <h2 className="fw-bold textc">{stoneNumber.capStoneNumber}</h2>
                 </div>
             </div>
         </>

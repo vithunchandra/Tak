@@ -61,11 +61,18 @@ body{
   margin-bottom: -5px;
 }
 .tombres{
-  margin-left: 600px;
+  margin-left: 850px;
   height:60px;
   width: 120px;
   text-align: right;
   margin-bottom: 10px;
+  background-color: black;
+}
+.restext1{
+  padding-top: 5px;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
 }
 .restext{
   padding-top: 5px;
@@ -75,7 +82,7 @@ body{
 }
 
 .tomblev{
-  margin-left: 400px;
+  margin-left: 40px;
   height:60px;
   width: 120px;
   text-align: right;
@@ -89,8 +96,8 @@ body{
   padding-top: 20px;
 }
 .levels{
-  background-color: #CAF0F8;
-  height:70px;
+  background-color: #3776A1;
+  height:90px;
 }
 .leveltext{
   padding-top: 10px;
@@ -116,10 +123,11 @@ body{
   background-color: #5DE23C;
 }
 .backgroundcolor{
-  background-color: #6EB1D6;
+  background-size: cover;
+  background-image:  linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../public/background.jpg");
+
 }
 .backgroundcolor2{
- 
   background-color: #6EB1D6;
 }
 .putih{
@@ -154,6 +162,11 @@ body{
   position: relative;
 }
 
+.textc{
+  font-size: 40px;
+  color:white;
+}
+
 .board-code,
 .position-absolute {
   position: absolute;
@@ -161,6 +174,9 @@ body{
 .margg{
   padding-top: 25px;
   padding-right: 15px;
+}
+.whitetext{
+  color:white
 }
 
 .margg1{

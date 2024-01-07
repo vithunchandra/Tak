@@ -60,33 +60,33 @@ function App() {
         <div className="col-5 judul"></div>
         <div className="col-2 judul ">TAK </div>
         <div className="col-5 judul">
-            <button className="btn btn-warning tombres" onClick={() => {restart()}}>
-              <h3 className="restext">Restart</h3>
+            <button className="btn bg-dark tombres" onClick={() => {restart()}}>
+              <h3 className="restext1">Restart</h3>
             </button>
         </div>
       </div>
-      <div className="row levels">
-        <div className="col-2 ">
+      <div className="row levels d-flex justify-content-around">
+        <div className="col-1 ">
             <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(1)}}>
               <h3 className="restext">Level 1</h3>
             </button>
         </div>
-        <div className="col-2">
+        <div className="col-1">
             <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(2)}}>
               <h3 className="restext">Level 2</h3>
             </button>
         </div>
-        <div className="col-2">
+        <div className="col-1">
             <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(3)}}>
               <h3 className="restext">Level 3</h3>
             </button>
         </div>
-        <div className="col-2">
+        <div className="col-1">
             <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(4)}}>
               <h3 className="restext">Level 4</h3>
             </button>
         </div>
-        <div className="col-2">
+        <div className="col-1">
             <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(5)}}>
               <h3 className="restext">Level 5</h3>
             </button>

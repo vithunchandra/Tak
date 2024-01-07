@@ -79,7 +79,7 @@ export default function Item(
         <>
             <div className="row text-center">
                 <div className="col-1 tulisan d-flex align-items">
-                    <h2 className="fw-bold">{stoneNumber.flatStoneNumber}</h2>
+                    <h2 className="fw-bold textc">{stoneNumber.flatStoneNumber}</h2>
                 </div>
                 <div className="col-4 d-flex align-items-center justify-content-center">
                     {
@@ -101,7 +101,7 @@ export default function Item(
             </div><br />
             <div className="row text-center">
                 <div className="col 2 tulisan d-flex align-items-center">
-                    <h2 className="fw-bold">{stoneNumber.capStoneNumber}</h2>
+                    <h2 className="fw-bold textc">{stoneNumber.capStoneNumber}</h2>
                 </div>
                 <div className="col-4 kirian">
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{

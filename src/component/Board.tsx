@@ -1519,7 +1519,7 @@ export default function Board(
     return (
         <div className="">
             <div className="row backgroundcolor leveltext">
-                <h2 className="">Level : {level}</h2>
+                <h2 className="whitetext">Level : {level}</h2>
             </div>
             {(!turn.turn) && 
              <div className="row backgroundcolor atas">
