@@ -34,7 +34,7 @@ export default function Board(
         }
     }
     let test = 0;
-    const global_ply = 4;
+    const global_ply = 3
     const botMove : {nextMove : Stone[][][], newStoneWhite : number, newStoneBlack : number, newCapStoneWhite : number, newCapStoneBlack : number} = {
         nextMove: [],
         newStoneWhite : whiteStoneNumber.flatStoneNumber,
@@ -592,6 +592,28 @@ export default function Board(
             }
         }
 
+        let isExplored: boolean[][] = [];
+        for(let i=0; i<size; i++){
+            isExplored.push([false, false, false, false, false, false])
+        }
+        console.log(isExplored)
+
+        for(let i=0; i<6; i++){
+            for(let j=0; j<6; j++){
+                if(board[i][j].length > 0 && !isExplored[i][j]){
+                    if(board[i][j][board[i][j].length - 1].color === Color.WHITE){
+                        minimizingScore += roadScore(board, isExplored, "vertical", 0, i, 0, 0, Color.WHITE, Point.CENTER, false)
+                        minimizingScore += roadScore(board, isExplored, "horizontal", i, 0, 0, 0, Color.WHITE, Point.CENTER, false)
+                    }
+    
+                    if(board[i][j][board[i][j].length - 1].color === Color.BLACK){
+                        maximizingScore += roadScore(board, isExplored, "vertical", 0, i, 0, 0, Color.BLACK, Point.CENTER, false)
+                        maximizingScore += roadScore(board, isExplored, "horizontal", i, 0, 0, 0, Color.BLACK, Point.CENTER, false)
+                    }
+                }
+            }
+        }
+
         // console.log(maximizingScore, minimizingScore)
 
         return maximizingScore - minimizingScore
@@ -682,46 +704,43 @@ export default function Board(
     //     return maximizingScore - minimizingScore
     // }
 
-    // function roadScore(
-    //     board: Stone[][][], direction: string, rowIndex: number, colIndex: number,
-    //     totalSteps: number, totalStone: number, color: Color, lastMove: Point,
-    //     isAllyCapstoneExist: boolean, isOpponentCapstoneExist: boolean
-    // ){
-    //     if(colIndex >= 6 || rowIndex >= 6 || colIndex < 0 || rowIndex < 0){
-    //         return totalStone / totalSteps * 100 * (isAllyCapstoneExist ? 2 : 1) * (isOpponentCapstoneExist ? 0.5 : 1) 
-    //     }
-    //     const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
-    //     if(stone && stone.color === color){
-    //         totalStone++
-    //     }
-    //     if(stone && stone.color !== color && stone.isCapStone){
-    //         isOpponentCapstoneExist = true
-    //     }
-    //     if(stone && stone.color === color && stone.isCapStone){
-    //         isAllyCapstoneExist = true
-    //     }
+    function roadScore(
+        board: Stone[][][], isExplored: boolean[][], direction: string, rowIndex: number, colIndex: number,
+        dx: number, dy: number, color: Color, lastMove: Point, isAllyCapstoneExist: boolean
+    ){
+        if(colIndex >= 6 || rowIndex >= 6 || colIndex < 0 || rowIndex < 0 || isExplored[rowIndex][colIndex]){
+            return dx * 100 * (isAllyCapstoneExist ? 2 : 1) + dy * 100 * (isAllyCapstoneExist ? 2 : 1)
+        }
+        const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
+        if(!stone || stone.color !== color || stone.position === Position.STAND){
+            return dx * 100 * (isAllyCapstoneExist ? 2 : 1) + dy * 100 * (isAllyCapstoneExist ? 2 : 1)
+        }
+        isExplored[rowIndex][colIndex] = true
+        if(stone && stone.color === color && stone.isCapStone){
+            isAllyCapstoneExist = true
+        }
 
-    //     let scoreUp: number = 0,scoreDown: number = 0, scoreLeft: number = 0, scoreRight: number = 0
+        let scoreUp: number = 0, scoreDown: number = 0, scoreLeft: number = 0, scoreRight: number = 0
 
-    //     if(lastMove !== Point.DOWN && direction !== "vertical"){
-    //         console.log("up");
-    //         scoreUp = roadScore(board, direction, rowIndex - 1, colIndex, totalSteps + 1, totalStone, color, Point.UP, isAllyCapstoneExist, isOpponentCapstoneExist)
-    //     }
-    //     if(lastMove !== Point.UP){
-    //         console.log("down");
-    //         scoreDown = roadScore(board, direction, rowIndex + 1, colIndex, totalSteps + 1, totalStone, color, Point.DOWN, isAllyCapstoneExist, isOpponentCapstoneExist)
-    //     }
-    //     if(lastMove !== Point.RIGHT && direction !== "horizontal"){
-    //         console.log("left");
-    //         scoreLeft = roadScore(board, direction, rowIndex, colIndex - 1, totalSteps + 1, totalStone, color, Point.LEFT, isAllyCapstoneExist, isOpponentCapstoneExist)
-    //     }
-    //     if(lastMove !== Point.LEFT){
-    //         console.log("right");
-    //         scoreRight = roadScore(board, direction, rowIndex, colIndex + 1, totalSteps + 1, totalStone, color, Point.RIGHT, isAllyCapstoneExist, isOpponentCapstoneExist)
-    //     }
+        if(lastMove !== Point.DOWN && direction !== "vertical"){
+            console.log("up");
+            scoreUp = roadScore(board, isExplored, direction, rowIndex - 1, colIndex, dx + 1, dy, color, Point.UP, isAllyCapstoneExist)
+        }
+        if(lastMove !== Point.UP){
+            console.log("down");
+            scoreDown = roadScore(board, isExplored, direction, rowIndex + 1, colIndex, dx + 1, dy, color, Point.DOWN, isAllyCapstoneExist)
+        }
+        if(lastMove !== Point.RIGHT && direction !== "horizontal"){
+            console.log("left");
+            scoreLeft = roadScore(board, isExplored, direction, rowIndex, colIndex - 1, dx, dy + 1, color, Point.LEFT, isAllyCapstoneExist)
+        }
+        if(lastMove !== Point.LEFT){
+            console.log("right");
+            scoreRight = roadScore(board, isExplored, direction, rowIndex, colIndex + 1, dx, dy + 1, color, Point.RIGHT, isAllyCapstoneExist)
+        }
         
-    //     return scoreUp + scoreDown + scoreLeft + scoreRight
-    // }
+        return scoreUp + scoreDown + scoreLeft + scoreRight
+    }
 
     function unstack({board, alpha, beta, ply, direction, row, col, stack, isFirst, blackStone, whiteStone, blackCapStone, whiteCapStone, turn}: {
         board: Stone[][][],
