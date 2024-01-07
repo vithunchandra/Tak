@@ -18,4 +18,5 @@ export default interface BoardDataInterface {
     setBlackStoneNumber: React.Dispatch<React.SetStateAction<StoneNumber>>;
     turn: Turn;
     setTurn: React.Dispatch<React.SetStateAction<Turn>>;
+    level:number;
 }

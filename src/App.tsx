@@ -14,7 +14,9 @@ function restart(){
   location.reload();
 }
 
+
 function App() {
+  const [level, setLevel] = useState(5) ;
   const [board, setBoard] = useState<Stone[][][]>();
   const [Cboard, setCBoard] = useState<Stone[][][]>();
   const [stoneStack, setStoneStack] = useState<StoneStack>({
@@ -22,6 +24,10 @@ function App() {
     Y: -1,
     Stack: undefined
   });
+  function levelply(level){
+    console.log("wcewcec");
+    setLevel(level);
+  }
   const [whiteStoneNumber, setWhiteStoneNumber] = useState<StoneNumber>(
     {
       capStoneNumber: 1,
@@ -59,6 +65,33 @@ function App() {
             </button>
         </div>
       </div>
+      <div className="row levels">
+        <div className="col-2 ">
+            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(1)}}>
+              <h3 className="restext">Level 1</h3>
+            </button>
+        </div>
+        <div className="col-2">
+            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(2)}}>
+              <h3 className="restext">Level 2</h3>
+            </button>
+        </div>
+        <div className="col-2">
+            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(3)}}>
+              <h3 className="restext">Level 3</h3>
+            </button>
+        </div>
+        <div className="col-2">
+            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(4)}}>
+              <h3 className="restext">Level 4</h3>
+            </button>
+        </div>
+        <div className="col-2">
+            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(5)}}>
+              <h3 className="restext">Level 5</h3>
+            </button>
+        </div>
+      </div>
       
       <div className="row">
         
@@ -77,6 +110,7 @@ function App() {
                 setStoneStack({X:-1, Y:-1, Stack:undefined});
                 setBoard(Cboard)
               }}>Cancel</button>}
+             
               <ItemPlayer 
                 stoneNumber={whiteStoneNumber} 
                 setStoneSelection={setStoneSelection} 
@@ -102,6 +136,7 @@ function App() {
             blackStoneNumber={blackStoneNumber}
             setBlackStoneNumber={setBlackStoneNumber}
             turn={turn} setTurn={setTurn}
+            level={level}
           ></Board>
         </div>
 

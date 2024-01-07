@@ -18,7 +18,8 @@ export default function Board(
         setWhiteStoneNumber, 
         blackStoneNumber, 
         setBlackStoneNumber, 
-        turn, setTurn
+        turn, setTurn,
+        level
     } : BoardDataInterface
     
 ){
@@ -34,7 +35,7 @@ export default function Board(
         }
     }
     let test = 0;
-    const global_ply = 4
+    const global_ply = level
     const botMove : {nextMove : Stone[][][], newStoneWhite : number, newStoneBlack : number, newCapStoneWhite : number, newCapStoneBlack : number} = {
         nextMove: [],
         newStoneWhite : whiteStoneNumber.flatStoneNumber,
@@ -1517,6 +1518,9 @@ export default function Board(
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div className="">
+            <div className="row backgroundcolor leveltext">
+                <h2 className="">Level : {level}</h2>
+            </div>
             {(!turn.turn) && 
              <div className="row backgroundcolor atas">
                 <p className="judul1">Black Turn !</p>
