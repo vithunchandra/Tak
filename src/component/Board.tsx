@@ -1527,8 +1527,8 @@ export default function Board(
             </div> }
 
             <div className="p-5 putihh border border-dark rounded rounded-4">
-                <div className=" justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
-                    <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} >
+                <div className=" justify-content-center mx-auto " style={{ width: `${width}px` }}>
+                    <div className="row justify-content-center mx-auto brownbg" style={{ width: `${width}px` }} >
                         <h2 className="col-1 margg" ></h2>
                         <div className="row jaraks col-10">
                             {columnCodes.map((y, indexY) => (
@@ -1537,7 +1537,7 @@ export default function Board(
                                     style={{ height: `${height / size}px` }}
                                     key={`${indexY}`}
                                 >
-                                    <h2>{y}</h2>
+                                    <h2  className="codecolor">{y}</h2>
                                 </div>
                                 
                             ))}
@@ -1545,8 +1545,8 @@ export default function Board(
                         </div>
                     
                         {board && board.map((x, indexX) => (
-                            <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} key={indexX.toString()}>
-                                <h2 className="col-1 margg" >{rowNumbers[indexX]}</h2>
+                            <div className="row justify-content-center mx-auto brownbg" style={{ width: `${width}px` }} key={indexX.toString()}>
+                                <h2 className="col-1 margg  codecolor" >{rowNumbers[indexX]}</h2>
                                 <div className="row col-10">
                                     {x.map((y, indexY) => (
                                         <div
@@ -1569,7 +1569,7 @@ export default function Board(
                                         
                                     ))}
                                 </div>
-                                <h2 className="col-1 margg1" >{rowNumbers[indexX]}</h2>
+                                <h2 className="col-1 margg1  codecolor" >{rowNumbers[indexX]}</h2>
                             </div>
                         ))}
                         {/* <div className="row batasbawah" ></div> */}
@@ -1580,7 +1580,7 @@ export default function Board(
                                     style={{ height: `${height / size}px` }}
                                     key={`${indexY}`}
                                 >
-                                    <h2>{y}</h2>
+                                    <h2 className="codecolor">{y}</h2>
                                 </div>
                                 
                             ))}
