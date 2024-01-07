@@ -1496,23 +1496,23 @@ export default function Board(
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div className="">
-            {(turnind === false) && 
+            {(!turn.turn) && 
              <div className="row backgroundcolor atas">
                 <p className="judul1">Black Turn !</p>
             </div> }
-            {(turnind === true) && 
+            {(turn.turn) && 
              <div className="row backgroundcolor atas">
                 <p className="judul2">White Turn !</p>
             </div> }
 
-            <div className="p-5 border border-dark rounded rounded-4">
+            <div className="p-5 putihh border border-dark rounded rounded-4">
                 <div className=" justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
                     <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} >
                         <h2 className="col-1 margg" ></h2>
                         <div className="row jaraks col-10">
                             {columnCodes.map((y, indexY) => (
                                 <div
-                                    className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
+                                    className={`col-2 position-relative d-flex align-items-center jarakabjad justify-content-center text-center`}
                                     style={{ height: `${height / size}px` }}
                                     key={`${indexY}`}
                                 >
@@ -1547,10 +1547,24 @@ export default function Board(
                                         </div>
                                         
                                     ))}
+                                </div>
+                                <h2 className="col-1 margg1" >{rowNumbers[indexX]}</h2>
                             </div>
-                        </div>
                         ))}
-                        <h2 className="col-1 margg" ></h2>
+                        {/* <div className="row batasbawah" ></div> */}
+                        <div className="row jaraks col-10">
+                            {columnCodes.map((y, indexY) => (
+                                <div
+                                    className={`col-2 position-relative d-flex align-items-center  justify-content-center text-center`}
+                                    style={{ height: `${height / size}px` }}
+                                    key={`${indexY}`}
+                                >
+                                    <h2>{y}</h2>
+                                </div>
+                                
+                            ))}
+                            
+                        </div>
                     </div>
                 </div>
             </div>
