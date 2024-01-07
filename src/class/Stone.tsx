@@ -11,7 +11,7 @@ export default class Stone {
 
     printStone(index: string){
         return this.isCapStone ? 
-            <div className={`position-absolute left-0 top-0 ${this.color}-capstone capstone`} key={index} style={{
+            <div className={`position-absolute left-0 top-0 ${this.color}-capstone capstone tengah`} key={index} style={{
                     zIndex: `${index}`
                 }}
             ></div> :

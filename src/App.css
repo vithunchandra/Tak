@@ -160,6 +160,9 @@ body{
 .brownbg{
   background-color: #987554;
 }
+.roundedl{
+  border-radius: 15px;
+}
 .codecolor{
   font-weight: 800;
 }
