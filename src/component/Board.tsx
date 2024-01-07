@@ -34,7 +34,7 @@ export default function Board(
         }
     }
     let test = 0;
-    const global_ply = 3
+    const global_ply = 4
     const botMove : {nextMove : Stone[][][], newStoneWhite : number, newStoneBlack : number, newCapStoneWhite : number, newCapStoneBlack : number} = {
         nextMove: [],
         newStoneWhite : whiteStoneNumber.flatStoneNumber,
@@ -54,13 +54,21 @@ export default function Board(
         // board && terminal(board);
     }, [board, turn])
     useEffect(() => {
-        // const cboard = copyBoard(temp);
+        const cboard = copyBoard(temp);
         // const stack = [new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, true, Color.BLACK)]
         // cboard[2][2] = stack;
-        // cboard[1][2] = [new Stone(Position.STAND, false, Color.BLACK)]
-        // cboard[2][3] = [new Stone(Position.FLAT, true, Color.BLACK)]
-        // cboard[3][2] = [new Stone(Position.STAND, false, Color.BLACK)]
-        // cboard[2][1] = [new Stone(Position.STAND, false, Color.BLACK)]
+        // cboard[5][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[4][0] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[4][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[4][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[3][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[2][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[2][2] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[2][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[1][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[3][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[3][4] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        cboard[3][5] = [new Stone(Position.FLAT, false, Color.WHITE)]
         // minimax(cboard, global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, 23, 30, 0, 1);
         // console.log(botMove.nextMove);
         // cboard[0][0] = [new Stone(Position.FLAT, false, Color.BLACK)]
@@ -69,7 +77,7 @@ export default function Board(
         // cboard[0][3] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // cboard[0][4] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // cboard[0][5] = [new Stone(Position.FLAT, false, Color.BLACK)]
-        // console.log(terminal(cboard));
+        console.log(terminal(cboard));
         // console.log((1 < 5) !== (1 > 4))
     }, [])
 
@@ -596,7 +604,7 @@ export default function Board(
         for(let i=0; i<size; i++){
             isExplored.push([false, false, false, false, false, false])
         }
-        console.log(isExplored)
+        // console.log(isExplored)
 
         for(let i=0; i<6; i++){
             for(let j=0; j<6; j++){
@@ -723,19 +731,19 @@ export default function Board(
         let scoreUp: number = 0, scoreDown: number = 0, scoreLeft: number = 0, scoreRight: number = 0
 
         if(lastMove !== Point.DOWN && direction !== "vertical"){
-            console.log("up");
+            // console.log("up");
             scoreUp = roadScore(board, isExplored, direction, rowIndex - 1, colIndex, dx + 1, dy, color, Point.UP, isAllyCapstoneExist)
         }
         if(lastMove !== Point.UP){
-            console.log("down");
+            // console.log("down");
             scoreDown = roadScore(board, isExplored, direction, rowIndex + 1, colIndex, dx + 1, dy, color, Point.DOWN, isAllyCapstoneExist)
         }
         if(lastMove !== Point.RIGHT && direction !== "horizontal"){
-            console.log("left");
+            // console.log("left");
             scoreLeft = roadScore(board, isExplored, direction, rowIndex, colIndex - 1, dx, dy + 1, color, Point.LEFT, isAllyCapstoneExist)
         }
         if(lastMove !== Point.LEFT){
-            console.log("right");
+            // console.log("right");
             scoreRight = roadScore(board, isExplored, direction, rowIndex, colIndex + 1, dx, dy + 1, color, Point.RIGHT, isAllyCapstoneExist)
         }
         
@@ -983,31 +991,33 @@ export default function Board(
                                 break
                             }
 
-                            // position stand
-                            nboard = copyBoard(board);
-                            nboard[i][j].push(new Stone(Position.STAND, false, (((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? Color.BLACK : Color.WHITE));
-                            value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone, turn);
-                            if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
-                                //max
-                                if(value > alpha) {
-                                    alpha = value
-                                    //save move
-                                    if(global_ply == ply){
-                                        botMove.nextMove = copyBoard(nboard);
-                                        botMove.newStoneWhite = nwhiteStone;
-                                        botMove.newStoneBlack = nblackStone;
-                                        botMove.newCapStoneWhite = whiteCapStone;
-                                        botMove.newCapStoneBlack = blackCapStone;
+                            if(turn != Color.WHITE){
+                                // position stand
+                                nboard = copyBoard(board);
+                                nboard[i][j].push(new Stone(Position.STAND, false, (((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? Color.BLACK : Color.WHITE));
+                                value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone, turn);
+                                if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
+                                    //max
+                                    if(value > alpha) {
+                                        alpha = value
+                                        //save move
+                                        if(global_ply == ply){
+                                            botMove.nextMove = copyBoard(nboard);
+                                            botMove.newStoneWhite = nwhiteStone;
+                                            botMove.newStoneBlack = nblackStone;
+                                            botMove.newCapStoneWhite = whiteCapStone;
+                                            botMove.newCapStoneBlack = blackCapStone;
+                                        }
+                                    }
+                                }else{
+                                    //min
+                                    if(value < beta) {
+                                        beta = value
                                     }
                                 }
-                            }else{
-                                //min
-                                if(value < beta) {
-                                    beta = value
+                                if(alpha >= beta){
+                                    break
                                 }
-                            }
-                            if(alpha >= beta){
-                                break
                             }
                         }
                         if(turn != Color.WHITE){
@@ -1496,11 +1506,11 @@ export default function Board(
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div className="">
-            {(turnind === false) && 
+            {(!turn.turn) && 
              <div className="row backgroundcolor atas">
                 <p className="judul1">Black Turn !</p>
             </div> }
-            {(turnind === true) && 
+            {(turn.turn) && 
              <div className="row backgroundcolor atas">
                 <p className="judul2">White Turn !</p>
             </div> }
