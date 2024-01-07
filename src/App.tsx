@@ -10,7 +10,9 @@ import ItemPlayer from './component/ItemPlayer';
 import { StoneSelection, StoneStack } from './Interface/Stone';
 import Turn from './Interface/Turn';
 
-
+function restart(){
+  location.reload();
+}
 
 function App() {
   const [board, setBoard] = useState<Stone[][][]>();
@@ -48,8 +50,14 @@ function App() {
   }, [stoneSelection])
   return (
     <div className='container-fluid'>
-      <div className="row atass">
-        <p className="judul ">TAK</p>
+      <div className="row atass ">
+        <div className="col-5 judul"></div>
+        <div className="col-2 judul ">TAK </div>
+        <div className="col-5 judul">
+            <button className="btn btn-warning tombres" onClick={() => {restart()}}>
+              <h3 className="restext">Restart</h3>
+            </button>
+        </div>
       </div>
       
       <div className="row">

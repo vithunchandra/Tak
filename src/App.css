@@ -47,11 +47,11 @@ body{
   transition: all 0.2s ease;
 }
 .atas{
-
   height:80px;
-
+  
 }
 .judul{
+  height:80px;
   background-color: #3776A1;
   text-align: center;
   color: #55E2E9;
@@ -59,6 +59,19 @@ body{
   font-size: 50px;
   font-family: Arial, Helvetica, sans-serif;
   margin-bottom: -5px;
+}
+.tombres{
+  margin-left: 600px;
+  height:60px;
+  width: 120px;
+  text-align: right;
+  margin-bottom: 10px;
+}
+.restext{
+  padding-top: 5px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #03045E;
 }
 .judul2{
   font-size: 40px;
