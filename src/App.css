@@ -86,6 +86,12 @@ body{
 .backgroundcolor{
   background-color: #6EB1D6;
 }
+.putih{
+  margin-left:-10px;
+}
+.batasbawah{
+  height:50px;
+}
 .board-code {
   width: 30px;
   height: 30px;
@@ -120,6 +126,11 @@ body{
   padding-top: 25px;
   padding-right: 15px;
 }
+
+.margg1{
+  padding-top: 25px;
+  text-align: center;
+}
 .warna{
   background-color: #F6E3BA;
   border:black 1px solid;
@@ -135,10 +146,13 @@ body{
 }
 
 .tulisan{
-  margin-left: 470px;
+  margin-left: 460px;
 }
 .kirian{
   margin-right: 7px;
+}
+.jarakabjad{
+  margin-left: -10px;
 }
 .jaraks{
   margin-bottom: -20px;

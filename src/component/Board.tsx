@@ -199,14 +199,19 @@ export default function Board(
             board[rowIndex][colIndex + 1].length <= 0 ? 0 : board[rowIndex][colIndex + 1].length - 1
         ]
         if(stone.color === stoneRight?.color && stoneRight?.position === Position.FLAT){
-            return leftToRight(board, rowIndex, colIndex + 1, "right")
+            if(leftToRight(board, rowIndex, colIndex + 1, "right")){
+                return true
+            }
         }
+        
         if(rowIndex-1 >= 0 && lastMove != "down"){
             const stoneUp = board[rowIndex - 1][colIndex][
                 board[rowIndex - 1][colIndex].length <= 0 ? 0 : board[rowIndex - 1][colIndex].length - 1
             ]
             if(stone.color === stoneUp?.color && stoneUp?.position === Position.FLAT){
-                return leftToRight(board, rowIndex - 1, colIndex, "up")
+                if(leftToRight(board, rowIndex - 1, colIndex, "up")){
+                    return true;
+                }
             }
         }
         if(rowIndex+1 < board.length && lastMove != "up"){
@@ -217,6 +222,7 @@ export default function Board(
                 return leftToRight(board, rowIndex + 1, colIndex, "down")
             }
         }
+        return false;
     }
 
     function upToDown(board: Stone[][][], rowIndex: number, colIndex: number, lastMove: string){
@@ -235,14 +241,18 @@ export default function Board(
             board[rowIndex + 1][colIndex].length <= 0 ? 0 : board[rowIndex + 1][colIndex].length - 1
         ]
         if(stone.color === stoneDown?.color && stoneDown?.position === Position.FLAT){
-            return upToDown(board, rowIndex + 1, colIndex, "down")
+            if(upToDown(board, rowIndex + 1, colIndex, "down")){
+                return true;
+            }
         }
         if(colIndex-1 >= 0 && lastMove != "right"){
             const stoneLeft = board[rowIndex][colIndex - 1][
                 board[rowIndex][colIndex - 1].length <= 0 ? 0 : board[rowIndex][colIndex - 1].length - 1
             ]
             if(stone.color === stoneLeft?.color && stoneLeft?.position === Position.FLAT){
-                return upToDown(board, rowIndex, colIndex - 1, "left")
+                if(upToDown(board, rowIndex, colIndex - 1, "left")){
+                    return true
+                }
             }
         }
         if(colIndex+1 < board.length && lastMove != "left"){
@@ -253,6 +263,7 @@ export default function Board(
                 return upToDown(board, rowIndex, colIndex + 1, "right")
             }
         }
+        return false
     }
 
     function checkTerminalNode(board : Stone[][][]) {
@@ -610,13 +621,11 @@ export default function Board(
             for(let j=0; j<6; j++){
                 if(board[i][j].length > 0 && !isExplored[i][j]){
                     if(board[i][j][board[i][j].length - 1].color === Color.WHITE){
-                        minimizingScore += roadScore(board, isExplored, "vertical", 0, i, 0, 0, Color.WHITE, Point.CENTER, false)
-                        minimizingScore += roadScore(board, isExplored, "horizontal", i, 0, 0, 0, Color.WHITE, Point.CENTER, false)
+                        minimizingScore += roadScore(board, isExplored, 0, i, 0, 0, Color.WHITE, Point.CENTER, false)
                     }
     
                     if(board[i][j][board[i][j].length - 1].color === Color.BLACK){
-                        maximizingScore += roadScore(board, isExplored, "vertical", 0, i, 0, 0, Color.BLACK, Point.CENTER, false)
-                        maximizingScore += roadScore(board, isExplored, "horizontal", i, 0, 0, 0, Color.BLACK, Point.CENTER, false)
+                        maximizingScore += roadScore(board, isExplored, 0, i, 0, 0, Color.BLACK, Point.CENTER, false)
                     }
                 }
             }
@@ -713,14 +722,20 @@ export default function Board(
     // }
 
     function roadScore(
-        board: Stone[][][], isExplored: boolean[][], direction: string, rowIndex: number, colIndex: number,
+        board: Stone[][][], isExplored: boolean[][], rowIndex: number, colIndex: number,
         dx: number, dy: number, color: Color, lastMove: Point, isAllyCapstoneExist: boolean
     ){
         if(colIndex >= 6 || rowIndex >= 6 || colIndex < 0 || rowIndex < 0 || isExplored[rowIndex][colIndex]){
+            if(dx >= 6 || dy >= 6){
+                return Number.MAX_SAFE_INTEGER
+            }
             return dx * 100 * (isAllyCapstoneExist ? 2 : 1) + dy * 100 * (isAllyCapstoneExist ? 2 : 1)
         }
         const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
         if(!stone || stone.color !== color || stone.position === Position.STAND){
+            if(dx >= 6 || dy >= 6){
+                return Number.MAX_SAFE_INTEGER
+            }
             return dx * 100 * (isAllyCapstoneExist ? 2 : 1) + dy * 100 * (isAllyCapstoneExist ? 2 : 1)
         }
         isExplored[rowIndex][colIndex] = true
@@ -730,21 +745,17 @@ export default function Board(
 
         let scoreUp: number = 0, scoreDown: number = 0, scoreLeft: number = 0, scoreRight: number = 0
 
-        if(lastMove !== Point.DOWN && direction !== "vertical"){
-            // console.log("up");
-            scoreUp = roadScore(board, isExplored, direction, rowIndex - 1, colIndex, dx + 1, dy, color, Point.UP, isAllyCapstoneExist)
+        if(lastMove !== Point.DOWN){
+            scoreUp = roadScore(board, isExplored, rowIndex - 1, colIndex, dx + 1, dy, color, Point.UP, isAllyCapstoneExist)
         }
         if(lastMove !== Point.UP){
-            // console.log("down");
-            scoreDown = roadScore(board, isExplored, direction, rowIndex + 1, colIndex, dx + 1, dy, color, Point.DOWN, isAllyCapstoneExist)
+            scoreDown = roadScore(board, isExplored, rowIndex + 1, colIndex, dx + 1, dy, color, Point.DOWN, isAllyCapstoneExist)
         }
-        if(lastMove !== Point.RIGHT && direction !== "horizontal"){
-            // console.log("left");
-            scoreLeft = roadScore(board, isExplored, direction, rowIndex, colIndex - 1, dx, dy + 1, color, Point.LEFT, isAllyCapstoneExist)
+        if(lastMove !== Point.RIGHT){
+            scoreLeft = roadScore(board, isExplored, rowIndex, colIndex - 1, dx, dy + 1, color, Point.LEFT, isAllyCapstoneExist)
         }
         if(lastMove !== Point.LEFT){
-            // console.log("right");
-            scoreRight = roadScore(board, isExplored, direction, rowIndex, colIndex + 1, dx, dy + 1, color, Point.RIGHT, isAllyCapstoneExist)
+            scoreRight = roadScore(board, isExplored, rowIndex, colIndex + 1, dx, dy + 1, color, Point.RIGHT, isAllyCapstoneExist)
         }
         
         return scoreUp + scoreDown + scoreLeft + scoreRight
@@ -994,7 +1005,7 @@ export default function Board(
                             if(turn != Color.WHITE){
                                 // position stand
                                 nboard = copyBoard(board);
-                                nboard[i][j].push(new Stone(Position.STAND, false, (((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) !== (turn == Color.WHITE)) ? Color.BLACK : Color.WHITE));
+                                nboard[i][j].push(new Stone(Position.STAND, false, ((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0) ? Color.BLACK : Color.WHITE));
                                 value = minimax(nboard, ply-1, alpha, beta, nblackStone, nwhiteStone, blackCapStone, whiteCapStone, turn);
                                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                                     //max
@@ -1515,14 +1526,14 @@ export default function Board(
                 <p className="judul2">White Turn !</p>
             </div> }
 
-            <div className="p-5 border border-dark rounded rounded-4">
+            <div className="p-5 putihh border border-dark rounded rounded-4">
                 <div className=" justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }}>
                     <div className="row justify-content-center mx-auto bg-secondary" style={{ width: `${width}px` }} >
                         <h2 className="col-1 margg" ></h2>
                         <div className="row jaraks col-10">
                             {columnCodes.map((y, indexY) => (
                                 <div
-                                    className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
+                                    className={`col-2 position-relative d-flex align-items-center jarakabjad justify-content-center text-center`}
                                     style={{ height: `${height / size}px` }}
                                     key={`${indexY}`}
                                 >
@@ -1557,10 +1568,24 @@ export default function Board(
                                         </div>
                                         
                                     ))}
+                                </div>
+                                <h2 className="col-1 margg1" >{rowNumbers[indexX]}</h2>
                             </div>
-                        </div>
                         ))}
-                        <h2 className="col-1 margg" ></h2>
+                        {/* <div className="row batasbawah" ></div> */}
+                        <div className="row jaraks col-10">
+                            {columnCodes.map((y, indexY) => (
+                                <div
+                                    className={`col-2 position-relative d-flex align-items-center  justify-content-center text-center`}
+                                    style={{ height: `${height / size}px` }}
+                                    key={`${indexY}`}
+                                >
+                                    <h2>{y}</h2>
+                                </div>
+                                
+                            ))}
+                            
+                        </div>
                     </div>
                 </div>
             </div>
