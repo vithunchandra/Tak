@@ -1560,7 +1560,7 @@ export default function Board(
                     
                         {board && board.map((x, indexX) => (
                             <div className="row justify-content-center mx-auto brownbg" style={{ width: `${width}px` }} key={indexX.toString()}>
-                                <h2 className="col-1 margg  codecolor" >{rowNumbers[indexX]}</h2>
+                                <h2 className="col-1 margg codecolor" >{rowNumbers[indexX]}</h2>
                                 <div className="row col-10">
                                     {x.map((y, indexY) => (
                                         <div
