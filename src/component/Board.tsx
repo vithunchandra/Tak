@@ -838,7 +838,7 @@ export default function Board(
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     if(value > alpha) {
                         if(global_ply == ply){
-                            botMove.nextMove = copyBoard(board);
+                            botMove.nextMove = copyBoard(newBoard);
                             botMove.newStoneWhite = whiteStone;
                             botMove.newStoneBlack = blackStone;
                             botMove.newCapStoneWhite = whiteCapStone;
@@ -865,7 +865,7 @@ export default function Board(
                 if((global_ply%2 == 0 ? ply%2 : (ply-1)%2) == 0){
                     if(value > alpha) {
                         if(global_ply == ply){
-                            botMove.nextMove = copyBoard(board);
+                            botMove.nextMove = copyBoard(newBoard);
                             botMove.newStoneWhite = whiteStone;
                             botMove.newStoneBlack = blackStone;
                             botMove.newCapStoneWhite = whiteCapStone;
