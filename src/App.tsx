@@ -16,7 +16,7 @@ function restart(){
 
 
 function App() {
-  const [level, setLevel] = useState(5) ;
+  const [level, setLevel] = useState(1) ;
   const [board, setBoard] = useState<Stone[][][]>();
   const [Cboard, setCBoard] = useState<Stone[][][]>();
   const [stoneStack, setStoneStack] = useState<StoneStack>({
@@ -24,8 +24,9 @@ function App() {
     Y: -1,
     Stack: undefined
   });
-  function levelply(level){
-    console.log("wcewcec");
+  const [stackView, setStackView] = useState<Stone[] | undefined>(undefined);
+  function levelply(level : number){
+    // console.log("test");
     setLevel(level);
   }
   const [whiteStoneNumber, setWhiteStoneNumber] = useState<StoneNumber>(
@@ -54,12 +55,13 @@ function App() {
   useEffect(() => {
     // console.log(stoneSelection)
   }, [stoneSelection])
+
   return (
     <div className='container-fluid'>
-      <div className="row atass ">
+      <div className="row atass">
         <div className="col-5 judul"></div>
         <div className="col-2 judul ">TAK </div>
-        <div className="col-5 judul">
+        <div className="col-5 judul d-flex justify-content-end">
             <button className="btn bg-dark tombres" onClick={() => {restart()}}>
               <h3 className="restext1">Restart</h3>
             </button>
@@ -93,12 +95,11 @@ function App() {
         </div>
       </div>
       
-      <div className="row">
-        
-        <div className='col backgroundcolor'>
+      <div className="row pb-5 backgroundcolor">
+        <div className='col'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
-              <Indicator stoneStack={stoneStack}></Indicator>
+              <Indicator stoneStack={stoneStack} stackView={stackView} location={"left"}></Indicator>
             </div>
             <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
               {(stoneSelection.stoneDetail != undefined || stoneStack?.Stack != undefined) && 
@@ -123,7 +124,7 @@ function App() {
           </div>
         </div>
 
-        <div className="col-auto mx-auto">
+        <div className="col-auto mx-0">
           <Board 
             stoneStack={stoneStack}
             setStoneStack={setStoneStack} 
@@ -136,14 +137,14 @@ function App() {
             blackStoneNumber={blackStoneNumber}
             setBlackStoneNumber={setBlackStoneNumber}
             turn={turn} setTurn={setTurn}
-            level={level}
+            level={level} setStackView={setStackView}
           ></Board>
         </div>
 
-        <div className='col backgroundcolor'>
+        <div className='col'>
           <div className='row flex-column h-100'>
             <div className="col-auto h-50 d-flex flex-colomn justify-content-center overflow-auto">
-              <Indicator stoneStack={stoneStack}></Indicator>
+              <Indicator stoneStack={stoneStack} stackView={stackView} location={"right"}></Indicator>
             </div>
             <div className='col-auto h-50 d-flex justify-content-center align-items-around flex-column'>
               <Item 
@@ -157,7 +158,6 @@ function App() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   )

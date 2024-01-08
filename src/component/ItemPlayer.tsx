@@ -78,7 +78,7 @@ export default function Item(
     return (
         <>
             <div className="row text-center">
-                <div className="col-1 tulisan d-flex align-items">
+                <div className="col-6 tulisan d-flex align-items-center">
                     <h2 className="fw-bold textc">{stoneNumber.flatStoneNumber}</h2>
                 </div>
                 <div className="col-4 d-flex align-items-center justify-content-center">
@@ -98,12 +98,13 @@ export default function Item(
                     }
                 </div>
             
-            </div><br />
+            </div>
+            <br />
             <div className="row text-center">
-                <div className="col 2 tulisan d-flex align-items-center">
+                <div className="col-6 tulisan d-flex align-items-center">
                     <h2 className="fw-bold textc">{stoneNumber.capStoneNumber}</h2>
                 </div>
-                <div className="col-4 kirian">
+                <div className="col-4 d-flex align-items-center justify-content-center">
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{
                         width: `${StoneSize.capStoneSize}px`,
                         height: `${StoneSize.capStoneSize}px`,

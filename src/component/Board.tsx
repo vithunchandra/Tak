@@ -19,13 +19,13 @@ export default function Board(
         blackStoneNumber, 
         setBlackStoneNumber, 
         turn, setTurn,
-        level
+        level, setStackView
     } : BoardDataInterface
     
 ){
     let turnind: boolean = true;
-    const width: number = 800;
-    const height: number = 700;
+    const width: number = 864;
+    const height: number = 720;
     const size: number = 6;
     const temp: Stone[][][] = [];
     for(let i=0; i<size; i++){
@@ -281,6 +281,15 @@ export default function Board(
             return Number.MAX_SAFE_INTEGER;
         }
         return undefined
+    }
+
+    function changeStackView(event: React.MouseEvent<HTMLElement>) {
+        const x = parseInt(event.currentTarget.getAttribute('data-x') || '-1');
+        const y = parseInt(event.currentTarget.getAttribute('data-y') || '-1');
+
+        if(board){
+            setStackView(board[x][y].slice());
+        }
     }
 
     function setIndicator(event: React.MouseEvent<HTMLElement>){
@@ -1527,40 +1536,38 @@ export default function Board(
     const columnCodes: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
-        <div className="">
+        <div>
             <div className="row backgroundcolor leveltext">
                 <h2 className="whitetext">Level : {level}</h2>
             </div>
             {(!turn.turn) && 
              <div className="row backgroundcolor atas">
-                <p className="judul1">Black Turn !</p>
+                <p className="judul1"><u>BLACK</u> Move</p>
             </div> }
             {(turn.turn) && 
              <div className="row backgroundcolor atas">
-                <p className="judul2">White Turn !</p>
+                <p className="judul2"><u>WHITE</u> Move</p>
             </div> }
 
-            <div className="p-5 putihh border border-dark rounded rounded-4">
-                <div className=" justify-content-center mx-auto " style={{ width: `${width}px` }}>
-                    <div className="row justify-content-center mx-auto brownbg" style={{ width: `${width}px` }} >
-                        <h2 className="col-1 margg" ></h2>
-                        <div className="row jaraks col-10">
+            <div>
+                <div className="justify-content-center mx-auto" style={{ width: `${width}px` }}>
+                    <div className="row justify-content-center mx-auto brownbg rounded-5" style={{ width: `${width}px`, boxShadow: "0 0 50px #523626", border: "10px solid #523626" }} >
+                        
+                        <div className="row col-10">
                             {columnCodes.map((y, indexY) => (
                                 <div
-                                    className={`col-2 position-relative d-flex align-items-center jarakabjad justify-content-center text-center`}
-                                    style={{ height: `${height / size}px` }}
+                                    className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
+                                    style={{ height: `${width / 12}px`, marginTop: "20px" }}
                                     key={`${indexY}`}
                                 >
-                                    <h2  className="codecolor">{y}</h2>
+                                    <h2 className="codecolor">{y}</h2>
                                 </div>
-                                
                             ))}
-                            
                         </div>
                     
                         {board && board.map((x, indexX) => (
-                            <div className="row justify-content-center mx-auto brownbg" style={{ width: `${width}px` }} key={indexX.toString()}>
-                                <h2 className="col-1 margg codecolor" >{rowNumbers[indexX]}</h2>
+                            <div className="row justify-content-center mx-auto" style={{ width: `${width}px` }} key={indexX.toString()}>
+                                <h2 className="col-1 mrg codecolor">{rowNumbers[indexX]}</h2>
                                 <div className="row col-10">
                                     {x.map((y, indexY) => (
                                         <div
@@ -1569,11 +1576,10 @@ export default function Board(
                                             key={`${indexX}${indexY}`}
                                             data-x={indexX} data-y={indexY}
                                             onClick={stoneSelection.isSelected ? placeStone : setIndicator}
+                                            onMouseEnter={changeStackView}
+                                            onMouseLeave={() => setStackView(undefined)}
                                         >
-                                            
-                                            {y.map((z, indexZ) => {
-
-                                            
+                                            {y.map((z, indexZ) => {   
                                             let idx = `${indexX}${indexY}${indexZ}`;
                                             return (
                                                 z.printStone(idx)
@@ -1583,27 +1589,24 @@ export default function Board(
                                         
                                     ))}
                                 </div>
-                                <h2 className="col-1 margg1  codecolor" >{rowNumbers[indexX]}</h2>
+                                <h2 className="col-1 mrg codecolor">{rowNumbers[indexX]}</h2>
                             </div>
                         ))}
-                        {/* <div className="row batasbawah" ></div> */}
-                        <div className="row jaraks col-10">
+
+                        <div className="row col-10">
                             {columnCodes.map((y, indexY) => (
                                 <div
-                                    className={`col-2 position-relative d-flex align-items-center  justify-content-center text-center`}
-                                    style={{ height: `${height / size}px` }}
+                                    className={`col-2 position-relative d-flex align-items-center justify-content-center text-center`}
+                                    style={{ height: `${width / 12}px`, marginBottom: "20px" }}
                                     key={`${indexY}`}
                                 >
                                     <h2 className="codecolor">{y}</h2>
                                 </div>
-                                
                             ))}
-                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
       )
-      
 }

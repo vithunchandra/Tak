@@ -61,8 +61,7 @@ body{
   margin-bottom: -5px;
 }
 .tombres{
-  margin-left: 850px;
-  height:60px;
+  height: 60px;
   width: 120px;
   text-align: right;
   margin-bottom: 10px;
@@ -123,9 +122,8 @@ body{
   background-color: #5DE23C;
 }
 .backgroundcolor{
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../public/background.jpg");
   background-size: cover;
-  background-image:  linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../public/background.jpg");
-
 }
 .backgroundcolor2{
   background-color: #6EB1D6;
@@ -171,17 +169,13 @@ body{
 .position-absolute {
   position: absolute;
 }
-.margg{
-  padding-top: 25px;
-  padding-right: 15px;
-}
 .whitetext{
   color:white
 }
-
-.margg1{
-  padding-top: 25px;
-  text-align: center;
+.mrg{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .warna{
   background-color: #F6E3BA;
@@ -194,27 +188,21 @@ body{
   font-size: 50px;
   background-color: red;
   margin-bottom: 25px;
-  margin-left: 200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tulisan{
-  margin-left: 460px;
-}
-.kirian{
-  margin-right: 7px;
-}
-.jarakabjad{
-  margin-left: -10px;
-}
-.jaraks{
-  margin-bottom: -20px;
+  margin-left: auto;
+  justify-content: end;
 }
 .brownbg{
-  background-color: #987554;
+  background-image: radial-gradient(#987554, #987554, #987554, #523626);
 }
 .roundedl{
   border-radius: 15px;
 }
 .codecolor{
   font-weight: 800;
+  color: lightgray;
 }

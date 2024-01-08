@@ -97,9 +97,10 @@ export default function Item(
                 <div className="col-6 d-flex align-items-center">
                     <h2 className="fw-bold textc">{stoneNumber.flatStoneNumber}</h2>
                 </div>
-            </div><br />
+            </div>
+            <br />
             <div className="row text-center">
-                <div className="col-4">
+                <div className="col-4 d-flex align-items-center justify-content-center">
                     <div className={`${stoneNumber.color}-capstone mx-auto`} style={{
                         width: `${StoneSize.capStoneSize}px`,
                         height: `${StoneSize.capStoneSize}px`,
@@ -107,7 +108,7 @@ export default function Item(
                         cursor:"pointer"
                     }} data-iscapstone="true" data-color={stoneNumber.color} onClick={selectStone}></div>
                 </div>
-                <div className="col d-flex align-items-center">
+                <div className="col-6 d-flex align-items-center">
                     <h2 className="fw-bold textc">{stoneNumber.capStoneNumber}</h2>
                 </div>
             </div>
