@@ -543,8 +543,8 @@ export default function Board(
 
     function staticBoardEvaluation(board: Stone[][][]){
         const flatStoneScore = 1
-        const flatStonePlacementScore = 3
-        const stackStoneScore = 5
+        const flatStonePlacementScore = 5
+        const stackStoneScore = 3
         const capstonePlacementMultiplier = 1.5
         let maximizingScore = 0
         let minimizingScore = 0
@@ -621,20 +621,20 @@ export default function Board(
         }
 
         let isExplored: boolean[][] = [];
-        for(let i=0; i<size; i++){
+        for(let i = 0; i < size; i++){
             isExplored.push([false, false, false, false, false, false])
         }
         // console.log(isExplored)
 
-        for(let i=0; i<6; i++){
-            for(let j=0; j<6; j++){
+        for(let i = 0; i < 6; i++){
+            for(let j = 0; j < 6; j++){
                 if(board[i][j].length > 0 && !isExplored[i][j]){
                     if(board[i][j][board[i][j].length - 1].color === Color.WHITE){
-                        minimizingScore += roadScore(board, isExplored, 0, i, 0, 0, Color.WHITE, Point.CENTER, false)
+                        minimizingScore += roadScore(board, isExplored, i, j, 0, 0, Color.WHITE, Point.CENTER, false)
                     }
     
                     if(board[i][j][board[i][j].length - 1].color === Color.BLACK){
-                        maximizingScore += roadScore(board, isExplored, 0, i, 0, 0, Color.BLACK, Point.CENTER, false)
+                        maximizingScore += roadScore(board, isExplored, i, j, 0, 0, Color.BLACK, Point.CENTER, false)
                     }
                 }
             }
@@ -738,15 +738,16 @@ export default function Board(
             if(dx >= 6 || dy >= 6){
                 return Number.MAX_SAFE_INTEGER
             }
-            return dx * 100 * (isAllyCapstoneExist ? 2 : 1) + dy * 100 * (isAllyCapstoneExist ? 2 : 1)
+            return dx * 10 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 10 * (isAllyCapstoneExist ? 1.5 : 1)
         }
         const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
         if(!stone || stone.color !== color || stone.position === Position.STAND){
             if(dx >= 6 || dy >= 6){
                 return Number.MAX_SAFE_INTEGER
             }
-            return dx * 100 * (isAllyCapstoneExist ? 2 : 1) + dy * 100 * (isAllyCapstoneExist ? 2 : 1)
+            return dx * 10 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 10 * (isAllyCapstoneExist ? 1.5 : 1)
         }
+
         isExplored[rowIndex][colIndex] = true
         if(stone && stone.color === color && stone.isCapStone){
             isAllyCapstoneExist = true
