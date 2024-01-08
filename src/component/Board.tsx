@@ -55,21 +55,21 @@ export default function Board(
         // board && terminal(board);
     }, [board, turn])
     useEffect(() => {
-        const cboard = copyBoard(temp);
+        // const cboard = copyBoard(temp);
         // const stack = [new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, false, Color.BLACK), new Stone(Position.FLAT, true, Color.BLACK)]
         // cboard[2][2] = stack;
         // cboard[5][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[4][0] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[4][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[4][0] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[4][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
         // cboard[4][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[3][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[2][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[2][2] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[2][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[1][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[3][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[3][4] = [new Stone(Position.FLAT, false, Color.WHITE)]
-        cboard[3][5] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[3][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[2][1] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[2][2] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[2][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[1][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[3][3] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[3][4] = [new Stone(Position.FLAT, false, Color.WHITE)]
+        // cboard[3][5] = [new Stone(Position.FLAT, false, Color.WHITE)]
         // minimax(cboard, global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, 23, 30, 0, 1);
         // console.log(botMove.nextMove);
         // cboard[0][0] = [new Stone(Position.FLAT, false, Color.BLACK)]
@@ -78,7 +78,7 @@ export default function Board(
         // cboard[0][3] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // cboard[0][4] = [new Stone(Position.FLAT, false, Color.BLACK)]
         // cboard[0][5] = [new Stone(Position.FLAT, false, Color.BLACK)]
-        console.log(terminal(cboard));
+        // console.log(terminal(cboard));
         // console.log((1 < 5) !== (1 > 4))
     }, [])
 
@@ -91,7 +91,11 @@ export default function Board(
                 alert("Black Won!!!")
             }else{
                 if(deskripsiLastMove == "placeStone" && stoneSelection?.stoneDetail){
-                    minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1, blackStoneNumber.capStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber, turn.firstMove ? Color.WHITE : Color.BLACK);
+                    if(turn.firstMove){
+                        minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, stoneSelection.stoneDetail.isCapstone ? blackStoneNumber.flatStoneNumber : blackStoneNumber.flatStoneNumber - 1, whiteStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? blackStoneNumber.capStoneNumber - 1 : blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber, turn.firstMove ? Color.WHITE : Color.BLACK);
+                    }else{
+                        minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.flatStoneNumber : whiteStoneNumber.flatStoneNumber - 1, blackStoneNumber.capStoneNumber, stoneSelection.stoneDetail.isCapstone ? whiteStoneNumber.capStoneNumber - 1 : whiteStoneNumber.capStoneNumber, turn.firstMove ? Color.WHITE : Color.BLACK);
+                    }
                 }else if(deskripsiLastMove == "move"){
                     minimax(copyBoard(temp), global_ply, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, blackStoneNumber.flatStoneNumber, whiteStoneNumber.flatStoneNumber, blackStoneNumber.capStoneNumber, whiteStoneNumber.capStoneNumber, turn.firstMove ? Color.WHITE : Color.BLACK);
                 }
@@ -434,8 +438,7 @@ export default function Board(
                                 flatStoneNumber: stoneSelection.stoneDetail.isCapstone ? blackStoneNumber.flatStoneNumber : blackStoneNumber.flatStoneNumber - 1,
                                 color: stoneSelection.stoneDetail.color
                             }
-                            )
-                            
+                        )    
                     }else{
                         setWhiteStoneNumber(
                             {
@@ -444,7 +447,6 @@ export default function Board(
                                 color: stoneSelection.stoneDetail.color
                             }
                         )
-                      
                     }
                     const temp = copyBoard(board);
                     board && stoneSelection.stoneDetail && temp[x][y].push(
@@ -1514,6 +1516,7 @@ export default function Board(
             }
         }
     }
+
     const columnCodes: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
