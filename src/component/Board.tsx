@@ -579,7 +579,7 @@ export default function Board(
                         //tanpa stacking
                         const stone = stack[0]
                         if(stone.color === Color.BLACK){
-                            maximizingScore += flatStoneScore
+                            maximizingScore += flatStoneScore + (blackStoneNumber.flatStoneNumber > 15 ? 5 : 0)
                         }else{
                             minimizingScore += flatStoneScore
                         }
@@ -602,13 +602,19 @@ export default function Board(
                             if(centerUpperStone.color === adjacentUpperStone.color){
                                 adjacentScore += flatStonePlacementScore
                             }
+                            if(centerUpperStone.isCapStone && (adjacentUpperStone.position === Position.STAND && adjacentUpperStone.color !== centerUpperStone.color)){
+                                adjacentScore += 100000
+                            }
+                        }
+                        if(centerUpperStone.isCapStone){
+                            adjacentScore -= 10000
                         }
                     }
 
                     if(centerUpperStone.color === Color.WHITE){
                         minimizingScore += adjacentScore;
                     }else{
-                        maximizingScore += adjacentScore;
+                        maximizingScore += adjacentScore - 100;
                     }
                 }
             }
