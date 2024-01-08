@@ -567,7 +567,7 @@ export default function Board(
                         }
 
                         if(upperStone.isCapStone){
-                            totalStackScore = totalStackScore * capstonePlacementMultiplier;
+                            totalStackScore = totalStackScore * capstonePlacementMultiplier
                         }
     
                         if(upperStone.color === Color.WHITE){
@@ -579,7 +579,7 @@ export default function Board(
                         //tanpa stacking
                         const stone = stack[0]
                         if(stone.color === Color.BLACK){
-                            maximizingScore += flatStoneScore + (blackStoneNumber.flatStoneNumber > 15 ? 5 : 0)
+                            maximizingScore += flatStoneScore
                         }else{
                             minimizingScore += flatStoneScore
                         }
@@ -738,14 +738,14 @@ export default function Board(
             if(dx >= 6 || dy >= 6){
                 return Number.MAX_SAFE_INTEGER
             }
-            return dx * 10 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 10 * (isAllyCapstoneExist ? 1.5 : 1)
+            return dx * 100 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 100 * (isAllyCapstoneExist ? 1.5 : 1)
         }
         const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
         if(!stone || stone.color !== color || stone.position === Position.STAND){
             if(dx >= 6 || dy >= 6){
                 return Number.MAX_SAFE_INTEGER
             }
-            return dx * 10 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 10 * (isAllyCapstoneExist ? 1.5 : 1)
+            return dx * 100 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 100 * (isAllyCapstoneExist ? 1.5 : 1)
         }
 
         isExplored[rowIndex][colIndex] = true
