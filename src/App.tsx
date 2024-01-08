@@ -14,7 +14,6 @@ function restart(){
   location.reload();
 }
 
-
 function App() {
   const [level, setLevel] = useState(1) ;
   const [board, setBoard] = useState<Stone[][][]>();
@@ -58,39 +57,40 @@ function App() {
 
   return (
     <div className='container-fluid'>
-      <div className="row atass">
-        <div className="col-5 judul"></div>
-        <div className="col-2 judul ">TAK </div>
-        <div className="col-5 judul d-flex justify-content-end">
-            <button className="btn bg-dark tombres" onClick={() => {restart()}}>
+      <div className="row header">
+        <div className="col-3 judul d-flex justify-content-start align-items-center">TAK</div>
+        <div className="row col-6">
+          <div className="d-flex justify-content-around align-items-center">
+            <div>
+                <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(1)}}>
+                  <h3 className="restext">Level 1</h3>
+                </button>
+            </div>
+            <div>
+                <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(2)}}>
+                  <h3 className="restext">Level 2</h3>
+                </button>
+            </div>
+            <div>
+                <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(3)}}>
+                  <h3 className="restext">Level 3</h3>
+                </button>
+            </div>
+            <div>
+                <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(4)}}>
+                  <h3 className="restext">Level 4</h3>
+                </button>
+            </div>
+            <div>
+                <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(5)}}>
+                  <h3 className="restext">Level 5</h3>
+                </button>
+            </div>
+          </div>
+        </div>
+        <div className="col-3 d-flex justify-content-end align-items-center">
+            <button className="btn bg-dark tombres border border-light" onClick={() => {restart()}}>
               <h3 className="restext1">Restart</h3>
-            </button>
-        </div>
-      </div>
-      <div className="row levels d-flex justify-content-around">
-        <div className="col-1 ">
-            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(1)}}>
-              <h3 className="restext">Level 1</h3>
-            </button>
-        </div>
-        <div className="col-1">
-            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(2)}}>
-              <h3 className="restext">Level 2</h3>
-            </button>
-        </div>
-        <div className="col-1">
-            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(3)}}>
-              <h3 className="restext">Level 3</h3>
-            </button>
-        </div>
-        <div className="col-1">
-            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(4)}}>
-              <h3 className="restext">Level 4</h3>
-            </button>
-        </div>
-        <div className="col-1">
-            <button className="btn btn-warning position-relative tomblev" onClick={() => {levelply(5)}}>
-              <h3 className="restext">Level 5</h3>
             </button>
         </div>
       </div>

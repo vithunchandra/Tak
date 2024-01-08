@@ -23,7 +23,6 @@ export default function Board(
     } : BoardDataInterface
     
 ){
-    let turnind: boolean = true;
     const width: number = 864;
     const height: number = 720;
     const size: number = 6;
@@ -274,10 +273,8 @@ export default function Board(
     function checkTerminalNode(board : Stone[][][]) {
         const checkTerminal = terminal(board);
         if(checkTerminal === Color.WHITE){
-            turnind = true;
             return Number.MIN_SAFE_INTEGER;
         }else if(checkTerminal === Color.BLACK){
-            turnind = false;
             return Number.MAX_SAFE_INTEGER;
         }
         return undefined
@@ -744,16 +741,16 @@ export default function Board(
         dx: number, dy: number, color: Color, lastMove: Point, isAllyCapstoneExist: boolean
     ){
         if(colIndex >= 6 || rowIndex >= 6 || colIndex < 0 || rowIndex < 0 || isExplored[rowIndex][colIndex]){
-            if(dx >= 6 || dy >= 6){
-                return Number.MAX_SAFE_INTEGER
-            }
+            // if(dx >= 6 || dy >= 6){
+            //     return Number.MAX_SAFE_INTEGER
+            // }
             return dx * 100 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 100 * (isAllyCapstoneExist ? 1.5 : 1)
         }
         const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
         if(!stone || stone.color !== color || stone.position === Position.STAND){
-            if(dx >= 6 || dy >= 6){
-                return Number.MAX_SAFE_INTEGER
-            }
+            // if(dx >= 6 || dy >= 6){
+            //     return Number.MAX_SAFE_INTEGER
+            // }
             return dx * 100 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 100 * (isAllyCapstoneExist ? 1.5 : 1)
         }
 
@@ -1537,21 +1534,21 @@ export default function Board(
     const rowNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return (
         <div>
-            <div className="row backgroundcolor leveltext">
-                <h2 className="whitetext">Level : {level}</h2>
+            <div className="row leveltext">
+                <h5 style={{margin: "0px", padding: "0px", marginTop:"-10px"}}>Level : {level}</h5>
             </div>
             {(!turn.turn) && 
-             <div className="row backgroundcolor atas">
+             <div className="row atas">
                 <p className="judul1"><u>BLACK</u> Move</p>
             </div> }
             {(turn.turn) && 
-             <div className="row backgroundcolor atas">
+             <div className="row atas">
                 <p className="judul2"><u>WHITE</u> Move</p>
             </div> }
 
             <div>
                 <div className="justify-content-center mx-auto" style={{ width: `${width}px` }}>
-                    <div className="row justify-content-center mx-auto brownbg rounded-5" style={{ width: `${width}px`, boxShadow: "0 0 50px #523626", border: "10px solid #523626" }} >
+                    <div className="row justify-content-center mx-auto brownbg rounded-5" style={{ width: `${width}px`, boxShadow: "0px 0px 25px #523626", border: "10px solid #523626" }} >
                         
                         <div className="row col-10">
                             {columnCodes.map((y, indexY) => (
