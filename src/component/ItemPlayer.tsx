@@ -5,7 +5,7 @@ import Stone from "../class/Stone";
 import { Color, Position, StoneSize } from "../enum/StoneEnum";
 
 export default function Item(
-    {stoneNumber, stoneSelection, setStoneSelection, stoneStack, setStoneStack, turn, setBoard, board, Cboard, setCBoard}: 
+    {stoneNumber, stoneSelection, setStoneSelection, stoneStack, setStoneStack, turn, setBoard, board, Cboard, setCBoard, isSomebodyWin}: 
     {
         stoneNumber: StoneNumber,
         stoneSelection: StoneSelection,
@@ -17,6 +17,7 @@ export default function Item(
         board: Stone[][][] | undefined,
         Cboard: Stone[][][] | undefined,
         setCBoard: React.Dispatch<React.SetStateAction<Stone[][][] | undefined>>,
+        isSomebodyWin: boolean
     }
 ){
     function copyBoard (board : Stone[][][]) {
@@ -35,41 +36,43 @@ export default function Item(
     }
 
     function selectStone(event: React.MouseEvent<HTMLElement>){
-        // console.log(stoneStack);
-        if(stoneStack?.Stack){
-            setStoneStack({X:-1, Y:-1, Stack: undefined});
-            Cboard && setBoard(copyBoard(Cboard))
-        }else{
-            board && setCBoard(copyBoard(board))
-        }
-
-        const isCapstone = event.currentTarget.getAttribute('data-iscapstone') === "false" ? false : true;
-        const color = event.currentTarget.getAttribute('data-color');
-        if(!isCapstone || !turn.firstMove){
-            const isSelectedNotNull = isCapstone ? stoneNumber.capStoneNumber > 0 ? true : false : stoneNumber.flatStoneNumber > 0 ? true : false;
-            if(isSelectedNotNull && ((color === "white" && turn.turn) || (color === "black" && !turn.turn))){
-                if(stoneSelection.stoneDetail?.isCapstone == false && stoneSelection.stoneDetail.position == "flat" && !turn.firstMove){
-                    setStoneSelection(
-                        {
-                            isSelected: true,
-                            stoneDetail: {
-                                color: Color.BLACK === color ? Color.BLACK : Color.WHITE,
-                                isCapstone: isCapstone,
-                                position: Position.STAND
+        if(!isSomebodyWin){
+            // console.log(stoneStack);
+            if(stoneStack?.Stack){
+                setStoneStack({X:-1, Y:-1, Stack: undefined});
+                Cboard && setBoard(copyBoard(Cboard))
+            }else{
+                board && setCBoard(copyBoard(board))
+            }
+    
+            const isCapstone = event.currentTarget.getAttribute('data-iscapstone') === "false" ? false : true;
+            const color = event.currentTarget.getAttribute('data-color');
+            if(!isCapstone || !turn.firstMove){
+                const isSelectedNotNull = isCapstone ? stoneNumber.capStoneNumber > 0 ? true : false : stoneNumber.flatStoneNumber > 0 ? true : false;
+                if(isSelectedNotNull && ((color === "white" && turn.turn) || (color === "black" && !turn.turn))){
+                    if(stoneSelection.stoneDetail?.isCapstone == false && stoneSelection.stoneDetail.position == "flat" && !turn.firstMove){
+                        setStoneSelection(
+                            {
+                                isSelected: true,
+                                stoneDetail: {
+                                    color: Color.BLACK === color ? Color.BLACK : Color.WHITE,
+                                    isCapstone: isCapstone,
+                                    position: Position.STAND
+                                }
                             }
-                        }
-                    )
-                }else{
-                    setStoneSelection(
-                        {
-                            isSelected: true,
-                            stoneDetail: {
-                                color: Color.BLACK === color ? Color.BLACK : Color.WHITE,
-                                isCapstone: isCapstone,
-                                position: Position.FLAT
+                        )
+                    }else{
+                        setStoneSelection(
+                            {
+                                isSelected: true,
+                                stoneDetail: {
+                                    color: Color.BLACK === color ? Color.BLACK : Color.WHITE,
+                                    isCapstone: isCapstone,
+                                    position: Position.FLAT
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

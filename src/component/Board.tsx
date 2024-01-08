@@ -19,7 +19,8 @@ export default function Board(
         blackStoneNumber, 
         setBlackStoneNumber, 
         turn, setTurn,
-        level, setStackView
+        level, setStackView,
+        setSomebodyWin
     } : BoardDataInterface
     
 ){
@@ -86,8 +87,10 @@ export default function Board(
             const checkTerminal_whiteTurn = terminal(temp);
             if(checkTerminal_whiteTurn == Color.WHITE){
                 alert("White Won!!!")
+                setSomebodyWin(true)
             }else if(checkTerminal_whiteTurn == Color.BLACK){
                 alert("Black Won!!!")
+                setSomebodyWin(true)
             }else{
                 if(deskripsiLastMove == "placeStone" && stoneSelection?.stoneDetail){
                     if(turn.firstMove){
@@ -118,8 +121,10 @@ export default function Board(
                 const checkTerminal_blackTurn = terminal(botMove.nextMove);
                 if(checkTerminal_blackTurn == Color.WHITE){
                     alert("White Won!!!")
+                    setSomebodyWin(true)
                 }else if(checkTerminal_blackTurn == Color.BLACK){
                     alert("Black Won!!!")
+                    setSomebodyWin(true)
                 }
             }
         }

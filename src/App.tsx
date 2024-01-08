@@ -51,6 +51,7 @@ function App() {
     turn: false,
     point: undefined
   });
+  const [isSomebodyWin, setSomebodyWin] = useState<boolean>(false);
   useEffect(() => {
     // console.log(stoneSelection)
   }, [stoneSelection])
@@ -119,6 +120,7 @@ function App() {
                 stoneStack={stoneStack} setStoneStack={setStoneStack} 
                 turn={turn} setBoard={setBoard} board={board}
                 Cboard={Cboard} setCBoard={setCBoard}
+                isSomebodyWin={isSomebodyWin}
               ></ItemPlayer>
             </div>
           </div>
@@ -138,6 +140,7 @@ function App() {
             setBlackStoneNumber={setBlackStoneNumber}
             turn={turn} setTurn={setTurn}
             level={level} setStackView={setStackView}
+            setSomebodyWin={setSomebodyWin}
           ></Board>
         </div>
 
@@ -154,6 +157,7 @@ function App() {
                 stoneStack={stoneStack} setStoneStack={setStoneStack} 
                 turn={turn} setBoard={setBoard} board={board} 
                 Cboard={Cboard} setCBoard={setCBoard}
+                isSomebodyWin={isSomebodyWin}
               ></Item>
             </div>
           </div>
