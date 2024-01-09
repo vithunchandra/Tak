@@ -574,6 +574,8 @@ export default function Board(
                             const stone = stack[k]
                             if(upperStone.color === stone.color){
                                 totalStackScore += stackStoneScore
+                            }else{
+                                totalStackScore -= stackStoneScore * 2
                             }
                         }
 
@@ -749,14 +751,14 @@ export default function Board(
             // if(dx >= 6 || dy >= 6){
             //     return Number.MAX_SAFE_INTEGER
             // }
-            return dx * 100 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 100 * (isAllyCapstoneExist ? 1.5 : 1)
+            return dx * 25 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 25 * (isAllyCapstoneExist ? 1.5 : 1)
         }
         const stone = board[rowIndex][colIndex].length - 1 < 0 ? undefined : board[rowIndex][colIndex][board[rowIndex][colIndex].length - 1]
         if(!stone || stone.color !== color || stone.position === Position.STAND){
             // if(dx >= 6 || dy >= 6){
             //     return Number.MAX_SAFE_INTEGER
             // }
-            return dx * 100 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 100 * (isAllyCapstoneExist ? 1.5 : 1)
+            return dx * 25 * (isAllyCapstoneExist ? 1.5 : 1) + dy * 25 * (isAllyCapstoneExist ? 1.5 : 1)
         }
 
         isExplored[rowIndex][colIndex] = true
